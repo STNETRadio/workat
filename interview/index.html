@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Interview Appointment | STNET Radio</title>
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+
+    <link rel="icon" href="/img/fav.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/CSS/brand.css" />
+
+    <style>
+        /* CRITICAL: Inline to prevent flash of wrong background */
+        :root {
+            --bg: #ffffff;
+            --container-bg: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #111;
+            --text-muted: #666;
+            --primary: #cc0000;
+            --primary-hover: #ff1a1a;
+            --success: #10b981;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #000000;
+                --container-bg: rgba(20, 20, 20, 0.7);
+                --border-color: rgba(255, 255, 255, 0.15);
+                --input-bg: rgba(255, 255, 255, 0.05);
+                --text-main: #eee;
+                --text-muted: #aaa;
+                --primary: #ff3333;
+                --primary-hover: #ff6666;
+                --success: #10b981;
+            }
+        }
+
+        html,
+        body {
+            background-color: var(--bg) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 100dvh !important;
+            color: var(--text-main);
+        }
+
+        /* Decorative glow orbs */
+        .hero-glow {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(204, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-glow-2 {
+            position: fixed;
+            bottom: -10%;
+            right: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(204, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+
+            .hero-glow,
+            .hero-glow-2 {
+                background: radial-gradient(circle, rgba(255, 51, 51, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            }
+        }
+
+        /* Animation */
+        .fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Main Layout */
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100dvh;
+            padding: 100px 20px 40px;
+            /* Space for header */
+        }
+
+        .appointment-card {
+            background: var(--container-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .appointment-card {
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        .appointment-card h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            background: rgb(0, 0, 0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .appointment-card h2 {
+                background: rgb(255, 255, 255);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+
+        #message {
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 30px;
+            color: var(--text-muted);
+            min-height: 24px;
+            font-size: 0.95rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            appearance: none;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.1);
+            background-color: var(--bg);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            input[type="text"]:focus {
+                box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.15);
+            }
+        }
+
+        input[readonly] {
+            opacity: 0.7;
+            cursor: default;
+            font-weight: 600;
+        }
+
+        input[readonly]:focus {
+            border-color: var(--border-color);
+            box-shadow: none;
+            background-color: var(--input-bg);
+        }
+
+        /* Custom Select */
+        .custom-select {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .select-selected {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--input-bg);
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1rem;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .select-selected span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .select-selected.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.1);
+            background-color: var(--bg);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .select-selected.active {
+                box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.15);
+            }
+        }
+
+        .select-selected .chevron {
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .select-selected.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .select-items {
+            position: absolute;
+            background-color: var(--container-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            z-index: 99;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            max-height: 250px;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .select-items {
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .select-hide {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .select-items div {
+            padding: 14px 16px;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.98rem;
+        }
+
+        .select-items div:last-child {
+            border-bottom: none;
+        }
+
+        .select-items div:hover {
+            background-color: rgba(204, 0, 0, 0.05);
+            color: var(--primary);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .select-items div:hover {
+                background-color: rgba(255, 51, 51, 0.1);
+            }
+        }
+
+        .select-items i {
+            width: 16px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .select-items div:hover i {
+            color: var(--primary);
+        }
+
+        /* Time Slots Array */
+        .time-slot-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .time-slot-btn {
+            padding: 14px 10px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-weight: 600;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .time-slot-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .time-slot-btn.selected {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+            transform: scale(1.02);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25);
+        }
+
+        .note {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        /* Submit Button */
+        #submitBtn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: "Chillax-Variable", sans-serif;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(204, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            #submitBtn {
+                box-shadow: 0 10px 20px rgba(255, 51, 51, 0.2);
+            }
+        }
+
+        #submitBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(204, 0, 0, 0.3);
+        }
+
+        #submitBtn:disabled {
+            background: var(--border-color);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        /* Status Colors */
+        .color-error {
+            color: var(--primary) !important;
+        }
+
+        .color-success {
+            color: var(--success) !important;
+        }
+
+        .color-normal {
+            color: var(--text-main) !important;
+        }
+
+        .color-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            background: var(--input-bg);
+            border-radius: 12px;
+            border: 1px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Mobile tweaks */
+        @media (max-width: 500px) {
+            .appointment-card {
+                padding: 30px 20px;
+                border: none;
+                border-radius: 0;
+                background: transparent;
+                box-shadow: none;
+                backdrop-filter: none;
+            }
+
+            .time-slot-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-wrapper {
+                padding: 80px 0 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="https://stnetradio.com" class="brand">STNET Radio</a>
+        <nav>
+            <ul>
+                <li><a href="https://stnetradio.com">Home</a></li>
+                <li><a href="mailto:hr@stnetradio.com">Contact our HR team</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-glow-2" aria-hidden="true"></div>
+
+    <div class="page-wrapper">
+        <div class="appointment-card fade-in-up">
+            <h2>Interview Appointment</h2>
+            <div id="message" class="color-muted"><i class="fa-solid fa-spinner fa-spin"></i> Checking booking code...
+            </div>
+
+            <form id="bookingForm" style="display: none;">
+                <label for="name">Candidate Name</label>
+                <input type="text" id="name" readonly>
+
+                <label>Select Date</label>
+                <div class="custom-select" id="customDateSelect">
+                    <div class="select-selected color-muted">
+                        <span id="selectedDateText"><i class="fa-solid fa-spinner fa-spin"></i> Loading available
+                            dates...</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="select-items select-hide" id="dateOptionsList">
+                        <!-- options will be injected here -->
+                    </div>
+                </div>
+                <input type="hidden" id="date" required>
+
+                <label>Select Time (Available Slots)</label>
+                <div id="timeSlotsContainer" class="time-slot-container">
+                    <div class="empty-state"><i class="fa-solid fa-calendar-day"></i> Please select a date first.</div>
+                </div>
+                <span class="note">* The interview session takes 1.5 hours.</span>
+
+                <input type="hidden" id="selectedTime" required>
+
+                <button type="submit" id="submitBtn">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- The original JS script untouched logic-wise, just changing some class/color injects slightly -->
+    <script>
+        // *** สำคัญ: ต้องทำการ New Deployment และเอา URL ใหม่มาใส่ตรงนี้นะครับ ***
+        const API_URL = "https://script.google.com/macros/s/AKfycbxf9VT-fHfpz79EWFT_RE1Mlo_oqTpIZdLKLiDxbDYz1xruhYEX3g2WZodw-G6Ag4tZ/exec";
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const messageDiv = document.getElementById('message');
+        const form = document.getElementById('bookingForm');
+
+        // Custom select elements
+        const customDateSelect = document.getElementById('customDateSelect');
+        const selectedDateText = document.getElementById('selectedDateText');
+        const dateOptionsList = document.getElementById('dateOptionsList');
+        const dateInput = document.getElementById('date');
+
+        const timeSlotsContainer = document.getElementById('timeSlotsContainer');
+        const selectedTimeInput = document.getElementById('selectedTime');
+
+        // โหลดหน้าแรก: ตรวจสอบรหัสและดึงวันที่
+        if (!code) {
+            messageDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Your link is incorrect. Please contact our HR team.';
+            messageDiv.className = "color-error";
+        } else {
+            fetch(API_URL + "?code=" + code)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.valid) {
+                        messageDiv.innerHTML = "Please select your preferred schedule.";
+                        messageDiv.className = "color-normal";
+                        document.getElementById('name').value = result.name;
+
+                        dateOptionsList.innerHTML = '';
+                        selectedDateText.innerHTML = '<i class="fa-regular fa-calendar" style="margin-right: 4px;"></i> <span>Select Date</span>';
+
+                        if (result.availableDates.length === 0) {
+                            selectedDateText.innerHTML = '<i class="fa-solid fa-calendar-xmark"></i> <span>No dates available</span>';
+                        }
+
+                        result.availableDates.forEach(dateStr => {
+                            let optionItem = document.createElement('div');
+                            let dateObj = new Date(dateStr);
+                            let formattedDate = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+                            optionItem.innerHTML = '<i class="fa-regular fa-calendar-check"></i> <span>' + formattedDate + '</span>';
+
+                            optionItem.addEventListener('click', function (e) {
+                                e.stopPropagation();
+                                selectedDateText.innerHTML = '<i class="fa-regular fa-calendar-check" style="color: var(--primary); margin-right: 4px;"></i> <span style="color: var(--text-main);">' + formattedDate + '</span>';
+                                dateInput.value = dateStr;
+                                customDateSelect.querySelector('.select-selected').classList.remove('active');
+                                dateOptionsList.classList.add('select-hide');
+
+                                // Call function to load slots
+                                loadTimeSlots(dateStr);
+                            });
+
+                            dateOptionsList.appendChild(optionItem);
+                        });
+
+                        form.style.display = "block";
+                    } else {
+                        messageDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + result.message;
+                        messageDiv.className = "color-error";
+                    }
+                })
+                .catch(err => {
+                    messageDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Unable to connect to the server.';
+                    messageDiv.className = "color-error";
+                });
+        }
+
+        // Dropdown toggle logic
+        customDateSelect.addEventListener('click', function () {
+            if (dateOptionsList.children.length > 0) {
+                const selected = this.querySelector('.select-selected');
+                selected.classList.toggle('active');
+                dateOptionsList.classList.toggle('select-hide');
+            }
+        });
+
+        // Close dropdown when outside click
+        document.addEventListener('click', function (e) {
+            if (!customDateSelect.contains(e.target)) {
+                customDateSelect.querySelector('.select-selected').classList.remove('active');
+                dateOptionsList.classList.add('select-hide');
+            }
+        });
+
+        // เมื่อเลือกวันที่ ให้โหลดเวลาว่างสำหรับวันนั้น
+        function loadTimeSlots(selectedDate) {
+            selectedTimeInput.value = ""; // รีเซ็ตเวลาที่เลือกไว้
+
+            if (!selectedDate) {
+                timeSlotsContainer.innerHTML = '<div class="empty-state"><i class="fa-solid fa-calendar-day"></i> Please select a date first.</div>';
+                return;
+            }
+
+            timeSlotsContainer.innerHTML = '<div class="empty-state" style="color: var(--text-main); border-color: var(--primary);"><i class="fa-solid fa-spinner fa-spin color-error"></i> Loading slots...</div>';
+
+            // ส่ง API ไปเช็คเวลาว่าง
+            fetch(API_URL + "?action=get_slots&date=" + selectedDate)
+                .then(response => response.json())
+                .then(result => {
+                    timeSlotsContainer.innerHTML = ""; // ล้างข้อความ Loading
+
+                    if (result.success && result.slots.length > 0) {
+                        // สร้างปุ่มเวลา
+                        result.slots.forEach(timeStr => {
+                            let btn = document.createElement('button');
+                            btn.type = "button";
+                            btn.className = "time-slot-btn";
+                            btn.innerHTML = '<i class="fa-regular fa-clock"></i> <span>' + timeStr + '</span>';
+
+                            // เมื่อคลิกปุ่มเวลา
+                            btn.addEventListener('click', function () {
+                                // เอาสีเขียวออกจากปุ่มอื่นทั้งหมด
+                                document.querySelectorAll('.time-slot-btn').forEach(b => {
+                                    b.classList.remove('selected');
+                                    let spanText = b.querySelector('span').textContent;
+                                    b.innerHTML = '<i class="fa-regular fa-clock"></i> <span>' + spanText + '</span>';
+                                });
+                                // ใส่สีเขียวให้ปุ่มนี้
+                                this.classList.add('selected');
+                                let activeSpanText = this.querySelector('span').textContent;
+                                this.innerHTML = '<i class="fa-solid fa-check"></i> <span>' + activeSpanText + '</span>';
+
+                                // เก็บค่าเวลาลงใน hidden input
+                                selectedTimeInput.value = activeSpanText.trim();
+                            });
+
+                            timeSlotsContainer.appendChild(btn);
+                        });
+                    } else {
+                        timeSlotsContainer.innerHTML = '<div class="empty-state color-error"><i class="fa-solid fa-calendar-xmark"></i> No available slots for this date.</div>';
+                    }
+                })
+                .catch(err => {
+                    timeSlotsContainer.innerHTML = '<div class="empty-state color-error"><i class="fa-solid fa-circle-exclamation"></i> Error loading slots.</div>';
+                });
+        }
+
+        // ส่งข้อมูลฟอร์ม
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (!selectedTimeInput.value) {
+                alert("Please select an available time slot.");
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+            const payload = {
+                code: code,
+                date: dateInput.value,
+                time: selectedTimeInput.value
+            };
+
+            fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        messageDiv.innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + result.message;
+                        messageDiv.className = "color-success";
+                        form.style.display = "none";
+                        // Scroll to top to see message
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        messageDiv.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> ' + result.message;
+                        messageDiv.className = "color-error";
+                        btn.disabled = false;
+                        btn.innerHTML = 'Confirm Booking';
+                    }
+                })
+                .catch(err => {
+                    messageDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> An error occurred while sending data.';
+                    messageDiv.className = "color-error";
+                    btn.disabled = false;
+                    btn.innerHTML = 'Confirm Booking';
+                });
+        });
+    </script>
+
+</body>
+
+</html>

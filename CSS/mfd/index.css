@@ -1,0 +1,253 @@
+/* Premium MFD Redesign */
+
+:root {
+    --bg: #050505;
+    --surface: rgba(255, 255, 255, 0.03);
+    --surface-highlight: rgba(255, 255, 255, 0.06);
+    --text: #ffffff;
+    --text-muted: #999999;
+    --accent: #ff0000;
+    --border: transparent;
+    --gap: 40px;
+    --radius: 32px;
+    --container: 1200px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+.brand-font {
+    font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+    font-weight: 600;
+}
+
+.text-gradient {
+    background: linear-gradient(to right, #fff, #888);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-accent {
+    color: var(--accent);
+}
+
+/* Layout */
+main {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+section {
+    margin-bottom: 120px;
+}
+
+/* Hero Section */
+.hero {
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    padding-top: 120px;
+}
+
+.hero h1 {
+    font-size: clamp(4rem, 15vw, 10rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 40px;
+}
+
+.hero-img {
+    width: 100%;
+    max-width: 800px;
+    border-radius: var(--radius);
+    /* Minimal: Removed heavy shadow and border */
+    opacity: 0.9;
+    transition: opacity 0.5s ease;
+}
+
+.hero-img:hover {
+    opacity: 1;
+}
+
+/* Bento Grid */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap);
+}
+
+.bento-card {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius);
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.bento-card:hover {
+    transform: translateY(-5px);
+    background: var(--surface-highlight);
+    /* Minimal: Removed colored border on hover */
+}
+
+.bento-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: var(--text);
+}
+
+.bento-card p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.bento-card.large {
+    grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bento-card.large {
+        grid-column: span 1;
+    }
+}
+
+/* Feature List */
+.feature-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--gap);
+}
+
+.feature-item {
+    text-align: left;
+    padding: 0;
+    background: transparent;
+    border: none;
+    /* Minimal: Removed background and border */
+}
+
+.feature-item h4 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: var(--text);
+}
+
+.feature-item p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+/* Comparison Section */
+.comparison {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.comparison h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 60px;
+}
+
+/* Footer Call to Action */
+.cta-section {
+    text-align: center;
+    padding: 100px 0;
+}
+
+.cta-text {
+    font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 60px;
+}
+
+.cta-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.cta-brand:hover {
+    opacity: 1;
+}
+
+.cta-logo {
+    width: 100px;
+    height: auto;
+}
+
+.cta-title {
+    font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+    font-size: clamp(4rem, 15vw, 10rem);
+    line-height: 1;
+    margin: 0;
+    letter-spacing: -0.04em;
+}
+
+/* Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.delay-1 {
+    animation-delay: 0.2s;
+}
+
+.delay-2 {
+    animation-delay: 0.4s;
+}
+
+.delay-3 {
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

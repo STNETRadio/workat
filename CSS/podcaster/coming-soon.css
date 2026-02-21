@@ -1,0 +1,276 @@
+:root {
+    --bg: #ffffff;
+    --text-color: #333333;
+    --brand-color: #000000;
+    --subtext-color: #666666;
+    --glow-color: rgba(204, 0, 0, 0.05);
+    --icon-bg: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+    --button-bg: #000000;
+    --button-text: #ffffff;
+    --button-hover-bg: #cc0000;
+    --button-hover-text: #ffffff;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Ambient Background Glow */
+.ambient-glow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    height: 80vh;
+    background: radial-gradient(circle, var(--glow-color) 0%, rgba(255, 255, 255, 0) 70%);
+    z-index: -1;
+    animation: pulse-glow 4s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes pulse-glow {
+    0% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+/* Custom Header Override for this dark page */
+header {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    top: 0;
+    width: 100%;
+    max-width: 1200px;
+    left: 50%;
+    transform: translateX(-50%) !important;
+    padding: 1.5rem 2rem;
+    position: absolute;
+    border-radius: 0 !important;
+}
+
+header:hover {
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: translateX(-50%) !important;
+}
+
+.brand {
+    color: var(--brand-color) !important;
+}
+
+nav a {
+    color: var(--subtext-color) !important;
+}
+
+nav a:hover,
+nav a.active-link {
+    color: var(--brand-color) !important;
+}
+
+#hamburger-btn span {
+    background-color: var(--brand-color) !important;
+}
+
+.coming-soon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.icon-wrapper {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.icon-circle {
+    width: 100px;
+    height: 100px;
+    background: var(--icon-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+    animation: float 6s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+}
+
+.icon-circle svg {
+    width: 50px;
+    height: 50px;
+    fill: white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    animation: ripple 2s linear infinite;
+}
+
+.ripple:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.ripple:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes ripple {
+    0% {
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+    }
+
+    100% {
+        width: 250%;
+        height: 250%;
+        opacity: 0;
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(2deg);
+    }
+
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+}
+
+h1 {
+    font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+    font-size: clamp(3rem, 10vw, 6rem);
+    margin-bottom: 1.5rem;
+    letter-spacing: -2px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--brand-color);
+}
+
+p {
+    font-size: 1.25rem;
+    color: var(--subtext-color);
+    max-width: 600px;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+strong {
+    color: var(--brand-color);
+    font-weight: 600;
+}
+
+.x-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--button-bg);
+    color: var(--button-text);
+    padding: 1.2rem 2.5rem;
+    border-radius: 100px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.x-button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    background: var(--button-hover-bg);
+    color: var(--button-hover-text);
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 2rem;
+    color: var(--subtext-color);
+    font-size: 0.9rem;
+    pointer-events: none;
+    /* Let clicks pass through if needed, though links need events */
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Dark Mode Overrides */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #050505;
+        --text-color: #ffffff;
+        --brand-color: #ffffff;
+        --subtext-color: #888888;
+        --glow-color: rgba(204, 0, 0, 0.15);
+        --button-bg: #ffffff;
+        --button-text: #000000;
+        --button-hover-bg: #ffffff;
+        --button-hover-text: #cc0000;
+    }
+
+    .ambient-glow {
+        background: radial-gradient(circle, var(--glow-color) 0%, rgba(5, 5, 5, 0) 70%);
+    }
+
+    h1 {
+        background: linear-gradient(to right, #ffffff, #aaaaaa);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .icon-circle {
+        box-shadow: 0 0 50px rgba(255, 0, 0, 0.4);
+    }
+
+    .x-button {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .x-button:hover {
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    }
+}

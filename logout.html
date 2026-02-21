@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Logged Out | STNET ID Staff Portal</title>
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-startup-image" href="/img/STNET-App.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <link rel="icon" href="/img/fav.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        /* CRITICAL: Inline to prevent flash of wrong background */
+        :root {
+            --bg: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #000000;
+            }
+        }
+
+        html {
+            background-color: var(--bg) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 100dvh !important;
+            height: 100% !important;
+        }
+
+        body {
+            background-color: var(--bg) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 100dvh !important;
+            overflow-x: hidden !important;
+        }
+    </style>
+
+    <link rel="stylesheet" href="/CSS/brand.css" />
+    <link rel="stylesheet" href="/CSS/staff.css" />
+    <link rel="stylesheet" href="/CSS/footer.css" />
+
+    <style>
+        /* ═══════════════════════════════════════════════
+           LOGOUT — PAGE-SPECIFIC STYLES
+           ═══════════════════════════════════════════════ */
+        .logout-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10rem 2rem 6rem;
+            min-height: 80vh;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            gap: 2rem;
+        }
+
+        .logout-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-glass-border);
+            padding: 4rem 3rem;
+            border-radius: 28px;
+            text-align: center;
+            max-width: 560px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.4s ease;
+        }
+
+        /* Hover glow underlay */
+        .logout-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            background: radial-gradient(ellipse at 50% 0%, var(--glow-color) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .logout-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(255, 0, 0, 0.08);
+            border-color: rgba(255, 0, 0, 0.2);
+        }
+
+        .logout-card:hover::before {
+            opacity: 1;
+        }
+
+        .logout-icon {
+            font-size: 4rem;
+            color: #00cc66;
+            margin-bottom: 2rem;
+            animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .logout-card h1 {
+            font-size: 2.2rem;
+            color: var(--red);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .logout-card p {
+            color: var(--subtext);
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            position: relative;
+            opacity: 0.8;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .btn-outline {
+            display: inline-block;
+            background: transparent;
+            color: var(--subtext);
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 60px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--card-glass-border);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--red);
+            color: var(--red);
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .security-tip {
+            font-size: 0.85rem;
+            color: var(--subtext);
+            opacity: 0.5;
+            max-width: 560px;
+            width: 100%;
+            text-align: center;
+            padding: 0 1rem;
+            line-height: 1.6;
+        }
+
+        .security-tip i {
+            color: var(--red);
+            margin-right: 6px;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .logout-container {
+                padding: 8rem 1.5rem 4rem;
+            }
+
+            .logout-card {
+                padding: 3rem 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="/" class="brand">SNR Staff Portal</a>
+        <button id="hamburger-btn" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+        </button>
+        <nav>
+            <ul>
+                <li><a href="/staff/">Home</a></li>
+                <li><a href="https://email.stnetradio.com">Email</a></li>
+                <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
+                <li><a href="https://drive.stnetradio.com">Drive</a></li>
+                <li><a href="https://messages.stnetradio.com">Messages</a></li>
+                <li><a href="https://docs.stnetradio.com">Documentation</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="logout-container">
+        <!-- Decorative glow orbs -->
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-glow-2" aria-hidden="true"></div>
+
+        <div class="logout-card fade-in-up">
+            <div class="logout-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <h1>Successfully Logged Out</h1>
+            <p>Thank you for using STNET ID.<br>You have been safely logged out.</p>
+
+            <div class="controls">
+                <a href="/staff/" class="btn-outline">Back to Home</a>
+            </div>
+        </div>
+
+        <div class="security-tip fade-in-up delay-1">
+            <p><i class="fa-solid fa-lock"></i>
+                <strong>Security Tip:</strong> Close your browser if you're on a public computer.
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://facebook.com/stnetradio" aria-label="Facebook">FB</a>
+            <a href="https://x.com/stnetradio" aria-label="Twitter">X</a>
+            <a href="https://instagram.com/stnetradio" aria-label="Instagram">IG</a>
+        </div>
+        <p class="copyright">&copy; 2026 STNET Radio. All rights reserved.</p>
+        <p>
+            <a href="/Privacy-Policy.html" class="st-link">Privacy Policy</a> |
+            <a href="/Terms-of-Service.html" class="st-link">Terms of Service</a>
+        </p>
+    </footer>
+
+    <script src="/JavaScript/viewport-fix.js"></script>
+    <script src="/JavaScript/mobile-menu.js"></script>
+    <script src="/JavaScript/pwa.js"></script>
+</body>
+
+</html>

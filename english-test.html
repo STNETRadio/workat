@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>English Test | STNET ID Staff Portal</title>
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-startup-image" href="/img/STNET-App.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <link rel="icon" href="/img/fav.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        /* CRITICAL: Inline to prevent flash of wrong background */
+        :root {
+            --bg: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #000000;
+            }
+        }
+
+        html {
+            background-color: var(--bg) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 100dvh !important;
+            height: 100% !important;
+        }
+
+        body {
+            background-color: var(--bg) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 100dvh !important;
+            overflow-x: hidden !important;
+        }
+    </style>
+
+    <link rel="stylesheet" href="/CSS/brand.css" />
+    <link rel="stylesheet" href="/CSS/staff.css" />
+    <link rel="stylesheet" href="/CSS/footer.css" />
+
+    <style>
+        /* ═══════════════════════════════════════════════
+           ENGLISH TEST — PAGE-SPECIFIC STYLES
+           ═══════════════════════════════════════════════ */
+        .test-hero {
+            position: relative;
+            padding: 8rem 2rem 5rem;
+            text-align: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Gradient divider bottom */
+        .test-hero::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            height: 1px;
+            background: var(--footer-gradient);
+        }
+
+        .test-hero h1 {
+            color: var(--red);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 0.75rem;
+            line-height: 1.15;
+            position: relative;
+        }
+
+        .test-hero p {
+            color: var(--subtext);
+            font-size: 1.2rem;
+            margin-bottom: 0;
+            opacity: 0.6;
+            position: relative;
+        }
+
+        .breadcrumb {
+            margin-bottom: 2rem;
+            color: var(--subtext);
+            opacity: 0.5;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .breadcrumb a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--red);
+        }
+
+        .test-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Info stat cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .info-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-glass-border);
+            padding: 2.5rem 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.4s ease;
+        }
+
+        .info-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: radial-gradient(ellipse at 50% 0%, var(--glow-color) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(255, 0, 0, 0.08);
+            border-color: rgba(255, 0, 0, 0.2);
+        }
+
+        .info-card:hover::before {
+            opacity: 1;
+        }
+
+        .info-card h3 {
+            color: var(--red);
+            font-size: 2.2rem;
+            margin-bottom: 0.25rem;
+            position: relative;
+        }
+
+        .info-card span {
+            color: var(--subtext);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.85rem;
+            position: relative;
+        }
+
+        /* Contact line */
+        .contact-line {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-line p {
+            color: var(--subtext);
+            margin-bottom: 0.5rem;
+            opacity: 0.5;
+        }
+
+        /* Checklist section — glassmorphism */
+        .checklist-section {
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .checklist-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            background: radial-gradient(ellipse at 50% 0%, var(--glow-color) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .checklist-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 50px rgba(255, 0, 0, 0.06);
+        }
+
+        .checklist-section:hover::before {
+            opacity: 1;
+        }
+
+        .checklist-section h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--red);
+            position: relative;
+        }
+
+        .check-list {
+            list-style: none;
+            position: relative;
+        }
+
+        .check-list li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1.4rem;
+            color: var(--subtext);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        .check-list li::before {
+            content: '\f00c';
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--red);
+            font-size: 0.9rem;
+        }
+
+        /* Start button — gradient glow */
+        .start-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--red), var(--red-bright, #ff3333));
+            color: #fff;
+            font-weight: 600;
+            padding: 1.2rem 2.5rem;
+            border-radius: 60px;
+            text-decoration: none;
+            font-size: 1.15rem;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.25);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 35px rgba(255, 0, 0, 0.4);
+        }
+
+        /* Shimmer sweep */
+        .start-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.25) 50%,
+                    transparent 70%);
+            transition: left 0.6s ease;
+        }
+
+        .start-btn:hover::after {
+            left: 100%;
+        }
+
+        /* About section */
+        .about-section {
+            margin-top: 2rem;
+        }
+
+        .about-block {
+            margin-bottom: 3rem;
+        }
+
+        .about-block h3 {
+            font-size: 1.4rem;
+            color: var(--subtext);
+            margin-bottom: 0.75rem;
+            border-left: 3px solid var(--red);
+            padding-left: 1rem;
+        }
+
+        .about-block p {
+            color: var(--subtext);
+            opacity: 0.6;
+            line-height: 1.9;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 600px) {
+            .test-hero {
+                padding: 6rem 1.5rem 3rem;
+            }
+
+            .test-container {
+                padding: 0 1.5rem 4rem;
+            }
+
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .checklist-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="/staff/" class="brand">SNR Staff Portal</a>
+        <button id="hamburger-btn" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+        </button>
+        <nav>
+            <ul>
+                <li><a href="/staff/">Home</a></li>
+                <li><a href="https://email.stnetradio.com">Email</a></li>
+                <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
+                <li><a href="https://drive.stnetradio.com">Drive</a></li>
+                <li><a href="https://messages.stnetradio.com">Messages</a></li>
+                <li><a href="https://docs.stnetradio.com">Documentation</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="test-hero">
+        <!-- Decorative glow orbs -->
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-glow-2" aria-hidden="true"></div>
+
+        <div class="breadcrumb fade-in-up">
+            <a href="/staff/">Staff Portal</a> &gt; English Test
+        </div>
+        <h1 class="fade-in-up delay-1">STNET Radio <br>English Test</h1>
+        <p class="fade-in-up delay-2">Powered by EF SET</p>
+    </div>
+
+    <div class="test-container">
+
+        <div class="info-cards">
+            <div class="info-card" data-animate data-delay="1">
+                <h3>90</h3>
+                <span>Minutes</span>
+            </div>
+            <div class="info-card" data-animate data-delay="2">
+                <h3><i class="fa-solid fa-graduation-cap"></i></h3>
+                <span>EF SET Certificate</span>
+            </div>
+        </div>
+
+        <div class="contact-line" data-animate>
+            <p>For any queries please contact</p>
+            <a href="mailto:englishtest@stnetradio.com" class="link">English Test Support</a>
+        </div>
+
+        <section class="checklist-section" data-animate>
+            <h2>Before getting started</h2>
+            <ul class="check-list">
+                <li>The speakers on your device are working</li>
+                <li>Your internet connection is stable</li>
+                <li>Your browser is up-to-date (Works best on Chrome)</li>
+                <li>All email or messaging services, calendars and other programs are closed to avoid distractions</li>
+            </ul>
+
+            <div style="margin-top: 2rem;">
+                <a href="https://assessment.corporate.ef.com/public/test/73c4c22a-fe01-472c-aa20-253f4e689467"
+                    class="start-btn" target="_blank">
+                    Start Assessment <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i>
+                </a>
+            </div>
+        </section>
+
+        <div class="about-section">
+            <div class="about-block" data-animate data-delay="1">
+                <h3>About STNET Radio</h3>
+                <p>STNET Radio is an online radio station dedicated to creating creative content and offering a diverse
+                    range of topics and broadcast formats to its listeners. Beyond serving its audience, STNET Radio
+                    also provides a platform for talented creators and dreamers to develop and share their radio
+                    content. We firmly believe that radio communication remains relevant and valuable, offering a
+                    convenient, economical and easily accessible channel that fosters a sense of intimacy with our
+                    listeners.</p>
+            </div>
+
+            <div class="about-block" data-animate data-delay="2">
+                <h3>About the EF SET</h3>
+                <p>The EF SET is a certifying exam that rests on a foundation of evidence-based research. It was
+                    developed to align with the Common European Framework of Reference (CEFR), an internationally
+                    recognized standard. The EF SET reliably assesses language skills across the full CEFR range, from
+                    pre-A1 to C2.</p>
+            </div>
+
+            <div class="about-block" data-animate data-delay="3">
+                <h3>About EF</h3>
+                <p>EF is an international education company that focuses on language, academics, cultural exchange and
+                    educational travel. Founded in 1965, EF's mission is "opening the world through education." Millions
+                    of students, companies and organizations have participated in an EF program and tens of thousands
+                    are currently learning a language with EF.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://facebook.com/stnetradio" aria-label="Facebook">FB</a>
+            <a href="https://x.com/stnetradio" aria-label="Twitter">X</a>
+            <a href="https://instagram.com/stnetradio" aria-label="Instagram">IG</a>
+        </div>
+        <p class="copyright">&copy; 2026 STNET Radio. All rights reserved.</p>
+        <p>
+            <a href="/Privacy-Policy.html" class="st-link">Privacy Policy</a> |
+            <a href="/Terms-of-Service.html" class="st-link">Terms of Service</a>
+        </p>
+    </footer>
+
+    <script src="/JavaScript/viewport-fix.js"></script>
+    <script src="/JavaScript/mobile-menu.js"></script>
+    <script src="/JavaScript/scroll-animate.js"></script>
+    <script src="/JavaScript/pwa.js"></script>
+</body>
+
+</html>

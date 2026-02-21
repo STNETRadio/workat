@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Poppins:wght@300;400;600;700&family=Source+Sans+3:wght@200..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #ffffff;
+  --red: #ff0000;
+  --subtext: #000000;
+  --desc: #555555;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --red: #ff0000;
+    --subtext: #ffffff;
+    --desc: #cccccc;
+  }
+}
+
+body {
+  font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+  background-color: var(--bg);
+  color: var(--red);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s;
+}
+
+.error-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  background: var(--bg);
+}
+
+.content-wrapper {
+  max-width: 800px;
+}
+
+.huge-text {
+  font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+  font-size: clamp(10rem, 30vw, 20rem);
+  font-weight: 700;
+  line-height: 0.8;
+  color: var(--red);
+  margin-bottom: 1rem;
+  letter-spacing: -10px;
+}
+
+.sub-text {
+  font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--subtext);
+  margin-bottom: 1.5rem;
+}
+
+.desc-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--desc);
+  margin-bottom: 3rem;
+}
+
+.btn-solid {
+  display: inline-block;
+  background-color: var(--red);
+  color: var(--bg);
+  padding: 1rem 3rem;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 2px solid var(--red);
+  transition: all 0.3s;
+}
+
+.btn-solid:hover {
+  background-color: var(--bg);
+  color: var(--red);
+  transform: scale(1.05);
+}

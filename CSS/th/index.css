@@ -1,0 +1,207 @@
+/* Chillax-Variable (logo only) */
+@font-face {
+    font-family: "Chillax-Variable";
+    src: url("/fonts/Chillax-Variable.woff2") format("woff2"),
+        url("/fonts/Chillax-Variable.woff") format("woff"),
+        url("/fonts/Chillax-Variable.ttf") format("truetype");
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+:root {
+    --bg: #000;
+    --text: #fff;
+    --muted: #cfd3d7;
+    --container: 900px;
+    --maxw: 580px;
+    --gap: 26px;
+    --page-pad: 48px;
+    --radius: 24px;
+    --shadow: 0 0 80px rgba(0, 0, 0, .5);
+    --ease: cubic-bezier(.22, .61, .36, 1);
+    --hdr: 64px;
+    /* set by JS */
+
+    /* Force Dark Mode Variables for index.css components */
+    --red: #ff0000;
+    --subtext: #cccccc;
+    --card-bg: #111111;
+    --card-border: #333333;
+    --btn-bg: #ff0000;
+    --btn-text: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block
+}
+
+html {
+    -webkit-text-size-adjust: 100%
+}
+
+/* Scoped styles for Queen Tribute section */
+.queen-tribute {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: calc(var(--page-pad) + env(safe-area-inset-top)) 16px 0;
+    margin-bottom: 4rem;
+}
+
+/* Global body resets to match index.css */
+body {
+    background: var(--bg);
+    color: var(--text);
+    color-scheme: dark;
+    font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+    line-height: 1.65;
+    letter-spacing: .2px;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* Thai Font Override for Mobile Menu */
+nav a {
+    font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+    font-weight: 600;
+}
+
+/* Figure & fade */
+figure {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto 150px
+}
+
+.portrait-wrap {
+    width: 100%;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    isolation: isolate;
+}
+
+.portrait {
+    width: 100%;
+    filter: grayscale(100%);
+    opacity: 0;
+    transform: translateY(6px);
+    animation: fadeIn .9s var(--ease) forwards;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-size: 100% 145%;
+    mask-size: 100% 145%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
+.portrait-wrap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 42%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .35) 55%, rgba(0, 0, 0, 1) 100%);
+    pointer-events: none;
+}
+
+/* Caption */
+figcaption {
+    opacity: 0;
+    margin-top: var(--gap);
+    animation: fadeInUp .8s var(--ease) forwards 1.05s;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.royal-title {
+    font-weight: 600;
+    font-size: clamp(17px, 2.3vw, 22px);
+    line-height: 1.5;
+    color: var(--text)
+}
+
+.royal-sub {
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 400;
+    opacity: .75;
+    line-height: 1.5
+}
+
+.royal-year {
+    font-size: clamp(13px, 1.9vw, 16px);
+    font-weight: 400;
+    opacity: .45;
+    line-height: 1.5;
+    margin-top: 4px
+}
+
+/* Footer */
+/* Footer styles removed to allow CSS/footer.css to control layout */
+
+/* Motion & Print */
+@media (prefers-reduced-motion:reduce) {
+    * {
+        animation: none !important;
+        transition: none !important
+    }
+
+    .portrait,
+    figcaption {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@media print {
+    body {
+        background: #fff;
+        color: #000;
+        padding: 0
+    }
+
+    header,
+    footer {
+        display: none
+    }
+
+    .portrait {
+        -webkit-mask-image: none;
+        mask-image: none
+    }
+
+    .portrait-wrap::after {
+        display: none
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(-3px)
+    }
+}

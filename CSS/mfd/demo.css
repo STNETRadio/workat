@@ -1,0 +1,151 @@
+@font-face {
+    font-family: 'Chillax-Variable';
+    src: url('/fonts/Chillax-Variable.woff2') format('woff2'),
+        url('/fonts/Chillax-Variable.woff') format('woff'),
+        url('/fonts/Chillax-Variable.ttf') format('truetype');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-red: #E23636;
+    --dark-text: #1A1A1A;
+    --light-text: #4A4A4A;
+    --background-dark: #0A0A0A;
+}
+
+body {
+    font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+    background: red;
+    color: var(--light-text);
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.hero {
+    background: red;
+    color: white;
+    padding: 6rem 5% 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.blog {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    margin: 2rem 7%;
+    padding: 3rem;
+    position: relative;
+    transform: translateY(-50px);
+    z-index: 10;
+}
+
+.blog h1 {
+    color: var(--primary-red);
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.blog h2 {
+    color: var(--dark-text);
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+}
+
+.blog h3 {
+    color: var(--dark-text);
+    margin-bottom: 0.75rem;
+}
+
+.blog-intro {
+    font-size: 1.25rem;
+    color: var(--light-text);
+    border-bottom: 2px solid var(--dark-text);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.blog p,
+.blog li {
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: var(--light-text);
+    margin-bottom: 1rem;
+}
+
+.blog ul {
+    list-style-type: disc;
+    margin-left: 2rem;
+}
+
+.blog img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 2rem 0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.292);
+}
+
+.date {
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+.stay {
+    color: var(--primary-red);
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin-top: 2rem;
+}
+
+footer {
+    background-color: var(--background-dark);
+    color: white;
+    text-align: center;
+    padding: 2rem 5%;
+    margin-top: auto;
+}
+
+footer a {
+    color: var(--primary-red);
+    text-decoration: none;
+    margin: 0 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .blog {
+        margin: 2rem 3%;
+        padding: 2rem;
+    }
+
+    .blog h1 {
+        font-size: 2.25rem;
+    }
+
+    .blog h2 {
+        font-size: 1.75rem;
+    }
+}

@@ -1,0 +1,417 @@
+/* === 1. Global Reset & Theme Variables === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+:root {
+  --red: #ff0000;
+  --red-dim: rgba(255, 0, 0, 0.15);
+  --red-glow: rgba(255, 0, 0, 0.25);
+  --bg: #ffffff;
+  --bg-2: #f5f5f7;
+  --text: #1a1a1a;
+  --subtext: #555555;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(0, 0, 0, 0.08);
+  --card-hover-shadow: rgba(255, 0, 0, 0.12);
+  --filter-bg: rgba(255, 255, 255, 0.8);
+  --hero-gradient: linear-gradient(135deg, #fff0f0 0%, #ffffff 50%, #fff8f0 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #080808;
+    --bg-2: #111111;
+    --text: #f0f0f0;
+    --subtext: #909090;
+    --card-bg: rgba(22, 22, 24, 0.75);
+    --card-border: rgba(255, 255, 255, 0.07);
+    --card-hover-shadow: rgba(255, 0, 0, 0.22);
+    --filter-bg: rgba(8, 8, 8, 0.82);
+    --hero-gradient: linear-gradient(135deg, #1a0000 0%, #080808 50%, #100808 100%);
+  }
+}
+
+body {
+  font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* === 2. Nav Active Link === */
+.active-link {
+  color: var(--red) !important;
+  font-weight: 700;
+}
+
+/* === 3. Hero Section === */
+.hero {
+  position: relative;
+  padding: 9rem 2rem 7rem;
+  text-align: center;
+  background: var(--hero-gradient);
+  overflow: hidden;
+  border-bottom: 1px solid var(--card-border);
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Animated blobs */
+.hero-blobs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: blobFloat 8s ease-in-out infinite;
+}
+
+.blob-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #ff4040, transparent 70%);
+  top: -150px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.blob-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #ff6b00, transparent 70%);
+  top: -80px;
+  right: -80px;
+  animation-delay: -3s;
+}
+
+.blob-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, #cc0000, transparent 70%);
+  bottom: -100px;
+  left: 40%;
+  animation-delay: -5s;
+}
+
+@keyframes blobFloat {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(20px, -30px) scale(1.05);
+  }
+
+  66% {
+    transform: translate(-15px, 15px) scale(0.97);
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--red);
+  margin-bottom: 1.2rem;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  background: rgba(255, 0, 0, 0.06);
+  padding: 5px 14px;
+  border-radius: 50px;
+  backdrop-filter: blur(8px);
+}
+
+.hero h1 {
+  font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+  font-size: clamp(4.5rem, 13vw, 9rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.85;
+  margin-bottom: 1.8rem;
+  color: var(--text);
+  letter-spacing: -4px;
+}
+
+.hero-desc {
+  font-size: 1.1rem;
+  max-width: 480px;
+  margin: 0 auto;
+  color: var(--subtext);
+  line-height: 1.7;
+}
+
+
+/* === 5. Main Grid === */
+.main-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+  flex: 1;
+}
+
+.podcasts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* === 6. Podcast Cards === */
+.podcast-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.38s ease, border-color 0.3s ease, box-shadow 0.38s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  /* Scroll animation */
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.podcast-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.55s ease, transform 0.55s ease,
+    border-color 0.3s ease, box-shadow 0.38s ease;
+}
+
+.podcast-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  border-color: rgba(255, 0, 0, 0.5);
+  box-shadow: 0 24px 50px var(--card-hover-shadow),
+    0 0 0 1px rgba(255, 0, 0, 0.15);
+}
+
+.podcast-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.podcast-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.podcast-card:hover .podcast-image img {
+  transform: scale(1.06);
+}
+
+/* Play overlay on image */
+.podcast-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.podcast-card:hover .podcast-play-overlay {
+  opacity: 1;
+}
+
+.podcast-play-overlay i {
+  font-size: 2.8rem;
+  color: white;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+  transform: scale(0.85);
+  transition: transform 0.3s ease;
+}
+
+.podcast-card:hover .podcast-play-overlay i {
+  transform: scale(1);
+}
+
+.podcast-content {
+  padding: 1.4rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.podcast-title {
+  font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text);
+  transition: color 0.2s;
+}
+
+.podcast-card:hover .podcast-title {
+  color: var(--red);
+}
+
+.podcast-creator {
+  font-size: 0.85rem;
+  color: var(--subtext);
+  font-weight: 500;
+}
+
+.podcast-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--subtext);
+  margin-top: 0.2rem;
+}
+
+.podcast-stats .stat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--red-dim);
+  color: var(--red);
+  padding: 3px 9px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+/* Thai / English font utilities */
+.thai-font,
+.thai-font-p {
+  font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+}
+
+.english-font,
+.english-font-p {
+  font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+}
+
+/* === 7. Footer === */
+footer {
+  margin-top: auto;
+  padding: 2.5rem 2rem;
+  border-top: 1px solid var(--card-border);
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.copyright {
+  color: var(--subtext);
+  font-size: 0.88rem;
+}
+
+.footer-links a {
+  color: var(--subtext);
+  font-weight: 600;
+  margin-left: 1.5rem;
+  font-size: 0.88rem;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--red);
+}
+
+/* === 8. Animations === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.85s forwards;
+  opacity: 0;
+}
+
+.delay-1 {
+  animation-delay: 0.12s;
+}
+
+/* === 9. Mobile === */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 4.5rem;
+    letter-spacing: -2px;
+  }
+
+  .podcasts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.4rem;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .footer-links a {
+    margin: 0 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 8rem 1.5rem 4rem;
+  }
+
+  .podcasts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .main-content {
+    padding: 2.5rem 1.2rem 8rem;
+  }
+}

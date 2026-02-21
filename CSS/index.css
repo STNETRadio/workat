@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Source+Sans+3:wght@200..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Auto Dark Mode handled in brand.css */
+
+body {
+  font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+  font-weight: 300;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.hero {
+  font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg);
+}
+
+.hero h1 {
+  font-weight: 700;
+  font-size: clamp(4rem, 12vw, 9rem);
+  text-transform: uppercase;
+  letter-spacing: -3px;
+  line-height: 0.9;
+  margin-bottom: 1rem;
+  color: var(--red);
+}
+
+.hero-sub {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  letter-spacing: 4px;
+  margin-bottom: 2rem;
+  color: var(--subtext);
+}
+
+.hero-desc {
+  font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  font-weight: 400;
+  color: var(--subtext);
+}
+
+.main-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+  border-top: 2px solid var(--red);
+}
+
+.grid-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 8rem;
+}
+
+@media (min-width: 900px) {
+  .grid-section {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .reverse-mobile {
+    direction: ltr;
+  }
+}
+
+@media (max-width: 899px) {
+  .reverse-mobile {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
+
+h2 {
+  font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+  font-size: 3rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  color: var(--red);
+}
+
+.text-block p {
+  margin-bottom: 1.5rem;
+  font-size: 1.15rem;
+  color: var(--subtext);
+}
+
+.btn-solid {
+  display: inline-block;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  padding: 1rem 2.5rem;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 2px solid var(--red);
+  transition: all 0.3s;
+}
+
+.btn-solid:hover {
+  background-color: var(--bg);
+  color: var(--red);
+  transform: translateY(-3px);
+}
+
+.card {
+  background: var(--card-bg);
+  padding: 3rem;
+  border-radius: 32px;
+  position: relative;
+  transition: transform 0.4s;
+  border: 2px solid var(--card-border);
+}
+
+.card:hover {
+  transform: translateY(-10px) rotate(1deg);
+  border-color: var(--red);
+}
+
+.card h3 {
+  font-family: "Chillax-Variable", "IBM Plex Sans Thai", sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--red);
+}
+
+.podcast-title {
+  display: block;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--subtext);
+}
+
+.thai-title {
+  display: block;
+  font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  color: var(--subtext);
+}
+
+.plus-features {
+  list-style: none;
+  margin: 1.5rem 0;
+  font-weight: 500;
+  color: var(--subtext);
+}
+
+.plus-features li {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plus-features li::before {
+  content: "✦";
+  color: var(--red);
+}
+
+.platforms {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.6;
+  margin-top: 2rem;
+  color: var(--subtext);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 0;
+}
+
+.delay-1 {
+  animation-delay: 0.2s;
+}
+
+.delay-2 {
+  animation-delay: 0.4s;
+}
