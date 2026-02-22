@@ -23,6 +23,7 @@
         /* CRITICAL: Inline to prevent flash of wrong background */
         :root {
             --bg: #ffffff;
+            --red: #f70000;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -46,234 +47,329 @@
             min-height: 100dvh !important;
             overflow-x: hidden !important;
         }
+
+        /* Loading Screen Style */
+        #loading-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+        }
+
+        #loading-screen i {
+            font-size: 2rem;
+            color: var(--red);
+            margin-bottom: 15px;
+        }
+
+        .user-nav-profile {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-right: 15px;
+        }
+
+        @media (min-width: 701px) {
+            .header-right nav ul {
+                flex-wrap: nowrap !important;
+            }
+        }
     </style>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="/CSS/brand.css" />
     <link rel="stylesheet" href="/CSS/staff.css" />
     <link rel="stylesheet" href="/CSS/footer.css" />
+
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
 </head>
 
 <body>
 
-    <header>
-        <a href="/" class="brand">SNR Staff Portal</a>
-        <button id="hamburger-btn" aria-label="Toggle navigation">
-            <span></span>
-            <span></span>
-        </button>
-        <nav>
-            <ul>
-                <li><a href="#" style="color: var(--red); font-weight: 700;">Home</a></li>
-                <li><a href="https://email.stnetradio.com">Email</a></li>
-                <li><a href="/email">Dispatch</a></li>
-                <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
-                <li><a href="https://drive.stnetradio.com">Drive</a></li>
-                <li><a href="https://messages.stnetradio.com">Messages</a></li>
-                <li><a href="https://docs.stnetradio.com">Documentation</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <div class="hero">
-        <!-- Decorative glow orbs -->
-        <div class="hero-glow" aria-hidden="true"></div>
-        <div class="hero-glow-2" aria-hidden="true"></div>
-
-        <div class="hero-content">
-            <h1 class="fade-in-up">STNET ID</h1>
-            <p class="hero-sub fade-in-up delay-1">Staff Portal & Workspace</p>
-        </div>
+    <div id="loading-screen">
+        <i class="fa-solid fa-circle-notch fa-spin"></i>
+        <p>Authenticating STNET ID...</p>
     </div>
 
-    <div class="dashboard-container">
+    <div id="protected-content" style="display: none;">
+        <header>
+            <a href="/" class="brand">SNR Staff Portal</a>
+            <button id="hamburger-btn" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+            </button>
+            <nav>
+                <ul>
+                    <li><a href="#" style="color: var(--red); font-weight: 700;">Home</a></li>
+                    <li><a href="https://email.stnetradio.com">Email</a></li>
+                    <li><a href="/email">Dispatch</a></li>
+                    <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
+                    <li><a href="https://drive.stnetradio.com">Drive</a></li>
+                    <li><a href="https://messages.stnetradio.com">Messages</a></li>
+                    <li><a href="https://docs.stnetradio.com">Documentation</a></li>
+                    <li style="margin-left: 10px; padding-left: 10px; border-left: 1px solid var(--border-color);">
+                        <a href="/profile.html" style="color: var(--text-main); font-weight: 600;"><i
+                                class="fa-regular fa-circle-user"></i> <span id="nav-user-name-text">STNET
+                                ID</span></a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
 
-        <!-- 1. Quick Access (5 Cols) -->
-        <section class="dashboard-section" data-animate>
-            <div class="section-header">
-                <h2>Quick Access</h2>
-                <p>Essential daily tools</p>
+        <div class="hero">
+            <div class="hero-glow" aria-hidden="true"></div>
+            <div class="hero-glow-2" aria-hidden="true"></div>
+
+            <div class="hero-content">
+                <h1 class="fade-in-up">STNET ID</h1>
+                <p class="hero-sub fade-in-up delay-1">Staff Portal & Workspace</p>
+                <p class="fade-in-up delay-2" style="margin-top: 15px; font-weight: 500; font-size: 1.1rem;">
+                    Welcome back, <span id="welcome-name" style="color: var(--red);">Team</span>
+                </p>
             </div>
-            <div class="quick-grid">
-                <a href="http://calendar.stnetradio.com" class="tool-card" target="_blank" data-animate data-delay="1">
-                    <i class="tool-icon fa-solid fa-calendar-days"></i>
-                    <span class="tool-name">Calendar</span>
-                    <span class="tool-desc">Schedule & Events</span>
-                </a>
-                <a href="http://email.stnetradio.com" class="tool-card" target="_blank" data-animate data-delay="2">
-                    <i class="tool-icon fa-solid fa-envelope"></i>
-                    <span class="tool-name">Email</span>
-                    <span class="tool-desc">Inbox & Drafts</span>
-                </a>
-                <a href="/email" class="tool-card" data-animate data-delay="3">
-                    <i class="tool-icon fa-solid fa-paper-plane"></i>
-                    <span class="tool-name">Dispatch</span>
-                    <span class="tool-desc">Send Emails</span>
-                </a>
-                <a href="http://drive.stnetradio.com" class="tool-card" target="_blank" data-animate data-delay="4">
-                    <i class="tool-icon fa-brands fa-google-drive"></i>
-                    <span class="tool-name">Drive</span>
-                    <span class="tool-desc">Files & Storage</span>
-                </a>
-                <a href="http://messages.stnetradio.com" class="tool-card" target="_blank" data-animate data-delay="5">
-                    <i class="tool-icon fa-solid fa-message"></i>
-                    <span class="tool-name">Messages</span>
-                    <span class="tool-desc">Chat & Team</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- 2. System Status & Resources (Split) -->
-        <section class="dashboard-section">
-            <div class="info-grid">
-
-                <!-- System Status Widget -->
-                <div class="dash-card" data-animate data-delay="1">
-                    <h3><i class="fa-solid fa-server"></i> System Status</h3>
-                    <div class="link-list">
-                        <div class="status-row">
-                            <div class="status-name">
-                                <i class="fa-brands fa-google" style="width: 20px;"></i> Email
-                            </div>
-                            <span class="status-indicator st-operational">Operational</span>
-                        </div>
-                        <div class="status-row">
-                            <div class="status-name">
-                                <i class="fa-solid fa-paper-plane" style="width: 20px;"></i> Dispatch
-                            </div>
-                            <span class="status-indicator st-operational">Operational</span>
-                        </div>
-                        <div class="status-row">
-                            <div class="status-name">
-                                <i class="fa-brands fa-google-drive" style="width: 20px;"></i> Drive
-                            </div>
-                            <span class="status-indicator st-operational">Operational</span>
-                        </div>
-                        <div class="status-row">
-                            <div class="status-name">
-                                <i class="fa-solid fa-id-card" style="width: 20px;"></i> STNET ID
-                            </div>
-                            <span class="status-indicator st-maintenance">Maintenance</span>
-                        </div>
-                        <div class="status-row">
-                            <div class="status-name">
-                                <i class="fa-solid fa-rss" style="width: 20px;"></i> RSS
-                            </div>
-                            <span class="status-indicator st-operational">Operational</span>
-                        </div>
-                    </div>
-                    <div class="status-updated">
-                        Last updated: Nov 30, 2025 12:00 AM
-                    </div>
-                </div>
-
-                <!-- Resources Widget -->
-                <div class="dash-card" data-animate data-delay="2">
-                    <h3><i class="fa-solid fa-book-open"></i> Resources</h3>
-                    <div class="link-list">
-                        <a href="https://docs.stnetradio.com/stnetid/home#login-instructions-for-employees"
-                            class="link-item" target="_blank">
-                            <div class="link-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                            <div class="link-content">
-                                <strong>Security Guidelines</strong>
-                                <span>Login instructions & 2FA setups</span>
-                            </div>
-                        </a>
-                        <a href="mailto:team@stnetradio.com" class="link-item" target="_blank">
-                            <div class="link-icon"><i class="fa-solid fa-headset"></i></div>
-                            <div class="link-content">
-                                <strong>IT Support</strong>
-                                <span>Contact helpdesk for assistance</span>
-                            </div>
-                        </a>
-                        <a href="https://docs.stnetradio.com" class="link-item" target="_blank">
-                            <div class="link-icon"><i class="fa-solid fa-folder-open"></i></div>
-                            <div class="link-content">
-                                <strong>Knowledge Base</strong>
-                                <span>Browse all documentation</span>
-                            </div>
-                        </a>
-                        <a href="/staff/english-test.html" class="link-item">
-                            <div class="link-icon"><i class="fa-solid fa-language"></i></div>
-                            <div class="link-content">
-                                <strong>English Test</strong>
-                                <span>Powered by EF SET</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- 3. Announcements -->
-        <section class="dashboard-section" data-animate>
-            <div class="section-header">
-                <h2>Announcements</h2>
-                <p>Latest updates from the team</p>
-            </div>
-
-            <div class="news-grid">
-
-                <div class="news-card" data-animate data-delay="1">
-                    <span class="news-badge">New</span>
-                    <h4>Email Dispatch</h4>
-                    <p>Our official Email Dispatch system is now live. Access templates and send official communications
-                        directly from our portal.</p>
-                    <div class="news-meta">
-                        <a href="/email" class="link">Open App</a> • Feb 22
-                    </div>
-                </div>
-
-                <div class="news-card" data-animate data-delay="2">
-                    <span class="news-badge">Tips</span>
-                    <h4>Chrome Integration</h4>
-                    <p>Use STNET ID on Google Chrome for seamless login across all our apps including VPN and RSS.</p>
-                    <div class="news-meta">
-                        <a href="https://support.google.com/chrome" class="link" target="_blank">Read Guide</a> • Nov 28
-                    </div>
-                </div>
-
-                <div class="news-card" data-animate data-delay="3">
-                    <span class="news-badge">Important</span>
-                    <h4>Cloudflare Outage</h4>
-                    <p>Services including ID and VPN are temporarily unavailable due to upstream provider issues.</p>
-                    <div class="news-meta">
-                        <a href="https://x.com/TeamSTNETRadio" class="link" target="_blank">Check Status</a> • Nov 18
-                    </div>
-                </div>
-
-                <div class="news-card" data-animate data-delay="4">
-                    <span class="news-badge">Update</span>
-                    <h4>Google Workspace</h4>
-                    <p>STNET Email has moved to Gmail. Please check the new login instructions for access.</p>
-                    <div class="news-meta">
-                        <a href="https://docs.stnetradio.com" class="link" target="_blank">Learn More</a> • Nov 1
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-    </div>
-
-    <footer>
-        <div class="social-links">
-            <a href="https://facebook.com/stnetradio" aria-label="Facebook">FB</a>
-            <a href="https://x.com/stnetradio" aria-label="Twitter">X</a>
-            <a href="https://instagram.com/stnetradio" aria-label="Instagram">IG</a>
         </div>
-        <p class="copyright">&copy; 2026 STNET Radio. All rights reserved.</p>
-        <p>
-            <a href="/Privacy-Policy.html" class="st-link">Privacy Policy</a> |
-            <a href="/Terms-of-Service.html" class="st-link">Terms of Service</a>
-        </p>
-    </footer>
 
+        <div class="dashboard-container">
+
+            <section class="dashboard-section" data-animate>
+                <div class="section-header">
+                    <h2>Quick Access</h2>
+                    <p>Essential daily tools</p>
+                </div>
+                <div class="quick-grid">
+                    <a href="http://calendar.stnetradio.com" class="tool-card" target="_blank" data-animate
+                        data-delay="1">
+                        <i class="tool-icon fa-solid fa-calendar-days"></i>
+                        <span class="tool-name">Calendar</span>
+                        <span class="tool-desc">Schedule & Events</span>
+                    </a>
+                    <a href="http://email.stnetradio.com" class="tool-card" target="_blank" data-animate data-delay="2">
+                        <i class="tool-icon fa-solid fa-envelope"></i>
+                        <span class="tool-name">Email</span>
+                        <span class="tool-desc">Inbox & Drafts</span>
+                    </a>
+                    <a href="/email" class="tool-card" data-animate data-delay="3">
+                        <i class="tool-icon fa-solid fa-paper-plane"></i>
+                        <span class="tool-name">Dispatch</span>
+                        <span class="tool-desc">Send Emails</span>
+                    </a>
+                    <a href="http://drive.stnetradio.com" class="tool-card" target="_blank" data-animate data-delay="4">
+                        <i class="tool-icon fa-brands fa-google-drive"></i>
+                        <span class="tool-name">Drive</span>
+                        <span class="tool-desc">Files & Storage</span>
+                    </a>
+                    <a href="http://messages.stnetradio.com" class="tool-card" target="_blank" data-animate
+                        data-delay="5">
+                        <i class="tool-icon fa-solid fa-message"></i>
+                        <span class="tool-name">Messages</span>
+                        <span class="tool-desc">Chat & Team</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="dashboard-section">
+                <div class="info-grid">
+
+                    <div class="dash-card" data-animate data-delay="1">
+                        <h3><i class="fa-solid fa-server"></i> System Status</h3>
+                        <div class="link-list">
+                            <div class="status-row">
+                                <div class="status-name">
+                                    <i class="fa-brands fa-google" style="width: 20px;"></i> Email
+                                </div>
+                                <span class="status-indicator st-operational">Operational</span>
+                            </div>
+                            <div class="status-row">
+                                <div class="status-name">
+                                    <i class="fa-solid fa-paper-plane" style="width: 20px;"></i> Dispatch
+                                </div>
+                                <span class="status-indicator st-operational">Operational</span>
+                            </div>
+                            <div class="status-row">
+                                <div class="status-name">
+                                    <i class="fa-brands fa-google-drive" style="width: 20px;"></i> Drive
+                                </div>
+                                <span class="status-indicator st-operational">Operational</span>
+                            </div>
+                            <div class="status-row">
+                                <div class="status-name">
+                                    <i class="fa-solid fa-id-card" style="width: 20px;"></i> STNET ID
+                                </div>
+                                <span class="status-indicator st-operational">Operational</span>
+                            </div>
+                            <div class="status-row">
+                                <div class="status-name">
+                                    <i class="fa-solid fa-rss" style="width: 20px;"></i> RSS
+                                </div>
+                                <span class="status-indicator st-operational">Operational</span>
+                            </div>
+                        </div>
+                        <div class="status-updated" id="status-time">
+                            Last updated: Just now
+                        </div>
+                    </div>
+
+                    <div class="dash-card" data-animate data-delay="2">
+                        <h3><i class="fa-solid fa-book-open"></i> Resources</h3>
+                        <div class="link-list">
+                            <a href="https://docs.stnetradio.com/stnetid/home#login-instructions-for-employees"
+                                class="link-item" target="_blank">
+                                <div class="link-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                                <div class="link-content">
+                                    <strong>Security Guidelines</strong>
+                                    <span>Login instructions & 2FA setups</span>
+                                </div>
+                            </a>
+                            <a href="mailto:team@stnetradio.com" class="link-item" target="_blank">
+                                <div class="link-icon"><i class="fa-solid fa-headset"></i></div>
+                                <div class="link-content">
+                                    <strong>IT Support</strong>
+                                    <span>Contact helpdesk for assistance</span>
+                                </div>
+                            </a>
+                            <a href="https://docs.stnetradio.com" class="link-item" target="_blank">
+                                <div class="link-icon"><i class="fa-solid fa-folder-open"></i></div>
+                                <div class="link-content">
+                                    <strong>Knowledge Base</strong>
+                                    <span>Browse all documentation</span>
+                                </div>
+                            </a>
+                            <a href="/english-test" class="link-item">
+                                <div class="link-icon"><i class="fa-solid fa-language"></i></div>
+                                <div class="link-content">
+                                    <strong>English Test</strong>
+                                    <span>Powered by EF SET</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="dashboard-section" data-animate>
+                <div class="section-header">
+                    <h2>Announcements</h2>
+                    <p>Latest updates from the team</p>
+                </div>
+
+                <div class="news-grid">
+
+                    <div class="news-card" data-animate data-delay="1">
+                        <span class="news-badge">New</span>
+                        <h4>Email Dispatch</h4>
+                        <p>Our official Email Dispatch system is now live. Access templates and send official
+                            communications
+                            directly from our portal.</p>
+                        <div class="news-meta">
+                            <a href="/email" class="link">Open App</a> • Feb 22
+                        </div>
+                    </div>
+
+                    <div class="news-card" data-animate data-delay="2">
+                        <span class="news-badge">Tips</span>
+                        <h4>Chrome Integration</h4>
+                        <p>Use STNET ID on Google Chrome for seamless login across all our apps including VPN and
+                            RSS.
+                        </p>
+                        <div class="news-meta">
+                            <a href="https://support.google.com/chrome" class="link" target="_blank">Read Guide</a>
+                            •
+                            Nov 28
+                        </div>
+                    </div>
+
+                    <div class="news-card" data-animate data-delay="3">
+                        <span class="news-badge">Important</span>
+                        <h4>Cloudflare Outage</h4>
+                        <p>Services including ID and VPN are temporarily unavailable due to upstream provider
+                            issues.
+                        </p>
+                        <div class="news-meta">
+                            <a href="https://x.com/TeamSTNETRadio" class="link" target="_blank">Check Status</a> •
+                            Nov
+                            18
+                        </div>
+                    </div>
+
+                    <div class="news-card" data-animate data-delay="4">
+                        <span class="news-badge">Update</span>
+                        <h4>Google Workspace</h4>
+                        <p>STNET Email has moved to Gmail. Please check the new login instructions for access.</p>
+                        <div class="news-meta">
+                            <a href="https://docs.stnetradio.com" class="link" target="_blank">Learn More</a> • Nov
+                            1
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <footer>
+            <div class="social-links">
+                <a href="https://facebook.com/stnetradio" aria-label="Facebook">FB</a>
+                <a href="https://x.com/stnetradio" aria-label="Twitter">X</a>
+                <a href="https://instagram.com/stnetradio" aria-label="Instagram">IG</a>
+            </div>
+            <p class="copyright">&copy; 2026 STNET Radio. All rights reserved.</p>
+            <p>
+                <a href="/Privacy-Policy.html" class="st-link">Privacy Policy</a> |
+                <a href="/Terms-of-Service.html" class="st-link">Terms of Service</a>
+            </p>
+        </footer>
+    </div>
     <script src="/JavaScript/viewport-fix.js"></script>
     <script src="/JavaScript/mobile-menu.js"></script>
     <script src="/JavaScript/scroll-animate.js"></script>
     <script src="/JavaScript/pwa.js"></script>
+
+    <script>
+        const AUTH0_DOMAIN = "auth.stnetradio.com";
+        const AUTH0_CLIENT_ID = "U4t6BLF2INrgwJbNTRXMpYitLD1SjTCW";
+        let auth0Client = null;
+
+        window.onload = async () => {
+            auth0Client = await auth0.createAuth0Client({
+                domain: AUTH0_DOMAIN,
+                clientId: AUTH0_CLIENT_ID,
+                authorizationParams: {
+                    redirect_uri: window.location.origin // ให้กลับมาหน้าแรกเสมอหลัง Login
+                },
+                cacheLocation: 'localstorage'
+            });
+
+            // ตรวจสอบ Callback กรณีเพิ่งเด้งกลับมาจากการ Login
+            if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
+                await auth0Client.handleRedirectCallback();
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            const isAuthenticated = await auth0Client.isAuthenticated();
+
+            if (isAuthenticated) {
+                // ถ้า Login ผ่านแล้ว ให้ซ่อนหน้า Loading แล้วโชว์เนื้อหาหลัก
+                document.getElementById("loading-screen").style.display = "none";
+                document.getElementById("protected-content").style.display = "block";
+
+                // ดึงชื่อมาแสดงผล
+                const user = await auth0Client.getUser();
+                document.getElementById("welcome-name").innerText = user.name || user.email;
+                document.getElementById("nav-user-name-text").innerText = user.name || "STNET ID";
+            } else {
+                // ถ้ายังไม่ Login ให้เด้งไปหน้า Login ของ Auth0 เลย
+                auth0Client.loginWithRedirect();
+            }
+        };
+
+        // ฟังก์ชันสำหรับปุ่ม Logout
+        function logout() {
+            auth0Client.logout({ logoutParams: { returnTo: window.location.origin } });
+        }
+    </script>
 </body>
 
 </html>
