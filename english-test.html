@@ -20,6 +20,7 @@
         rel="stylesheet" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
 
     <style>
         /* CRITICAL: Inline to prevent flash of wrong background */
@@ -55,6 +56,43 @@
     <link rel="stylesheet" href="/CSS/footer.css" />
 
     <style>
+        /* ═══════════════════════════════════════════════
+           AUTH0 SYSTEM STYLES
+           ═══════════════════════════════════════════════ */
+        #loading-view {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: var(--subtext, #666);
+            font-family: 'Inter', sans-serif;
+        }
+
+        #loading-view.active-view {
+            display: flex !important;
+        }
+
+        #loading-view i {
+            font-size: 2rem;
+            color: var(--red);
+            margin-bottom: 15px;
+        }
+
+        #app-view {
+            display: none;
+        }
+
+        #app-view.active-view {
+            display: block !important;
+        }
+
+        .user-nav-profile {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-right: 15px;
+        }
+
         /* ═══════════════════════════════════════════════
            ENGLISH TEST — PAGE-SPECIFIC STYLES
            ═══════════════════════════════════════════════ */
@@ -348,118 +386,184 @@
 
 <body>
 
-    <header>
-        <a href="/staff/" class="brand">SNR Staff Portal</a>
-        <button id="hamburger-btn" aria-label="Toggle navigation">
-            <span></span>
-            <span></span>
-        </button>
-        <nav>
-            <ul>
-                <li><a href="/staff/">Home</a></li>
-                <li><a href="https://email.stnetradio.com">Email</a></li>
-                <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
-                <li><a href="https://drive.stnetradio.com">Drive</a></li>
-                <li><a href="https://messages.stnetradio.com">Messages</a></li>
-                <li><a href="https://docs.stnetradio.com">Documentation</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <div class="test-hero">
-        <!-- Decorative glow orbs -->
-        <div class="hero-glow" aria-hidden="true"></div>
-        <div class="hero-glow-2" aria-hidden="true"></div>
-
-        <div class="breadcrumb fade-in-up">
-            <a href="/staff/">Staff Portal</a> &gt; English Test
-        </div>
-        <h1 class="fade-in-up delay-1">STNET Radio <br>English Test</h1>
-        <p class="fade-in-up delay-2">Powered by EF SET</p>
+    <div id="loading-view" class="active-view">
+        <i class="fa-solid fa-circle-notch fa-spin"></i>
+        <p>Authenticating STNET ID...</p>
     </div>
 
-    <div class="test-container">
+    <div id="app-view">
 
-        <div class="info-cards">
-            <div class="info-card" data-animate data-delay="1">
-                <h3>90</h3>
-                <span>Minutes</span>
+        <header>
+            <a href="/staff/" class="brand">SNR Staff Portal</a>
+            <button id="hamburger-btn" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+            </button>
+            <nav>
+                <ul>
+                    <li><span class="user-nav-profile" id="nav-user-name"></span></li>
+                    <li><a href="/staff/">Home</a></li>
+                    <li><a href="https://email.stnetradio.com">Email</a></li>
+                    <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
+                    <li><a href="https://drive.stnetradio.com">Drive</a></li>
+                    <li><a href="https://messages.stnetradio.com">Messages</a></li>
+                    <li><a href="https://docs.stnetradio.com">Documentation</a></li>
+                    <li><a href="#" onclick="logout()" style="color: #666;"><i
+                                class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="test-hero">
+            <!-- Decorative glow orbs -->
+            <div class="hero-glow" aria-hidden="true"></div>
+            <div class="hero-glow-2" aria-hidden="true"></div>
+
+            <div class="breadcrumb fade-in-up">
+                <a href="/staff/">Staff Portal</a> &gt; English Test
             </div>
-            <div class="info-card" data-animate data-delay="2">
-                <h3><i class="fa-solid fa-graduation-cap"></i></h3>
-                <span>EF SET Certificate</span>
-            </div>
+            <h1 class="fade-in-up delay-1">STNET Radio <br>English Test</h1>
+            <p class="fade-in-up delay-2">Powered by EF SET</p>
         </div>
 
-        <div class="contact-line" data-animate>
-            <p>For any queries please contact</p>
-            <a href="mailto:englishtest@stnetradio.com" class="link">English Test Support</a>
+        <div class="test-container">
+
+            <div class="info-cards">
+                <div class="info-card" data-animate data-delay="1">
+                    <h3>90</h3>
+                    <span>Minutes</span>
+                </div>
+                <div class="info-card" data-animate data-delay="2">
+                    <h3><i class="fa-solid fa-graduation-cap"></i></h3>
+                    <span>EF SET Certificate</span>
+                </div>
+            </div>
+
+            <div class="contact-line" data-animate>
+                <p>For any queries please contact</p>
+                <a href="mailto:englishtest@stnetradio.com" class="link">English Test Support</a>
+            </div>
+
+            <section class="checklist-section" data-animate>
+                <h2>Before getting started</h2>
+                <ul class="check-list">
+                    <li>The speakers on your device are working</li>
+                    <li>Your internet connection is stable</li>
+                    <li>Your browser is up-to-date (Works best on Chrome)</li>
+                    <li>All email or messaging services, calendars and other programs are closed to avoid distractions
+                    </li>
+                </ul>
+
+                <div style="margin-top: 2rem;">
+                    <a href="https://assessment.corporate.ef.com/public/test/73c4c22a-fe01-472c-aa20-253f4e689467"
+                        class="start-btn" target="_blank">
+                        Start Assessment <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i>
+                    </a>
+                </div>
+            </section>
+
+            <div class="about-section">
+                <div class="about-block" data-animate data-delay="1">
+                    <h3>About STNET Radio</h3>
+                    <p>STNET Radio is an online radio station dedicated to creating creative content and offering a
+                        diverse
+                        range of topics and broadcast formats to its listeners. Beyond serving its audience, STNET Radio
+                        also provides a platform for talented creators and dreamers to develop and share their radio
+                        content. We firmly believe that radio communication remains relevant and valuable, offering a
+                        convenient, economical and easily accessible channel that fosters a sense of intimacy with our
+                        listeners.</p>
+                </div>
+
+                <div class="about-block" data-animate data-delay="2">
+                    <h3>About the EF SET</h3>
+                    <p>The EF SET is a certifying exam that rests on a foundation of evidence-based research. It was
+                        developed to align with the Common European Framework of Reference (CEFR), an internationally
+                        recognized standard. The EF SET reliably assesses language skills across the full CEFR range,
+                        from
+                        pre-A1 to C2.</p>
+                </div>
+
+                <div class="about-block" data-animate data-delay="3">
+                    <h3>About EF</h3>
+                    <p>EF is an international education company that focuses on language, academics, cultural exchange
+                        and
+                        educational travel. Founded in 1965, EF's mission is "opening the world through education."
+                        Millions
+                        of students, companies and organizations have participated in an EF program and tens of
+                        thousands
+                        are currently learning a language with EF.</p>
+                </div>
+            </div>
+
         </div>
 
-        <section class="checklist-section" data-animate>
-            <h2>Before getting started</h2>
-            <ul class="check-list">
-                <li>The speakers on your device are working</li>
-                <li>Your internet connection is stable</li>
-                <li>Your browser is up-to-date (Works best on Chrome)</li>
-                <li>All email or messaging services, calendars and other programs are closed to avoid distractions</li>
-            </ul>
-
-            <div style="margin-top: 2rem;">
-                <a href="https://assessment.corporate.ef.com/public/test/73c4c22a-fe01-472c-aa20-253f4e689467"
-                    class="start-btn" target="_blank">
-                    Start Assessment <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i>
-                </a>
+        <footer>
+            <div class="social-links">
+                <a href="https://facebook.com/stnetradio" aria-label="Facebook">FB</a>
+                <a href="https://x.com/stnetradio" aria-label="Twitter">X</a>
+                <a href="https://instagram.com/stnetradio" aria-label="Instagram">IG</a>
             </div>
-        </section>
-
-        <div class="about-section">
-            <div class="about-block" data-animate data-delay="1">
-                <h3>About STNET Radio</h3>
-                <p>STNET Radio is an online radio station dedicated to creating creative content and offering a diverse
-                    range of topics and broadcast formats to its listeners. Beyond serving its audience, STNET Radio
-                    also provides a platform for talented creators and dreamers to develop and share their radio
-                    content. We firmly believe that radio communication remains relevant and valuable, offering a
-                    convenient, economical and easily accessible channel that fosters a sense of intimacy with our
-                    listeners.</p>
-            </div>
-
-            <div class="about-block" data-animate data-delay="2">
-                <h3>About the EF SET</h3>
-                <p>The EF SET is a certifying exam that rests on a foundation of evidence-based research. It was
-                    developed to align with the Common European Framework of Reference (CEFR), an internationally
-                    recognized standard. The EF SET reliably assesses language skills across the full CEFR range, from
-                    pre-A1 to C2.</p>
-            </div>
-
-            <div class="about-block" data-animate data-delay="3">
-                <h3>About EF</h3>
-                <p>EF is an international education company that focuses on language, academics, cultural exchange and
-                    educational travel. Founded in 1965, EF's mission is "opening the world through education." Millions
-                    of students, companies and organizations have participated in an EF program and tens of thousands
-                    are currently learning a language with EF.</p>
-            </div>
-        </div>
+            <p class="copyright">&copy; 2026 STNET Radio. All rights reserved.</p>
+            <p>
+                <a href="/Privacy-Policy.html" class="st-link">Privacy Policy</a> |
+                <a href="/Terms-of-Service.html" class="st-link">Terms of Service</a>
+            </p>
+        </footer>
 
     </div>
-
-    <footer>
-        <div class="social-links">
-            <a href="https://facebook.com/stnetradio" aria-label="Facebook">FB</a>
-            <a href="https://x.com/stnetradio" aria-label="Twitter">X</a>
-            <a href="https://instagram.com/stnetradio" aria-label="Instagram">IG</a>
-        </div>
-        <p class="copyright">&copy; 2026 STNET Radio. All rights reserved.</p>
-        <p>
-            <a href="/Privacy-Policy.html" class="st-link">Privacy Policy</a> |
-            <a href="/Terms-of-Service.html" class="st-link">Terms of Service</a>
-        </p>
-    </footer>
 
     <script src="/JavaScript/viewport-fix.js"></script>
     <script src="/JavaScript/mobile-menu.js"></script>
     <script src="/JavaScript/scroll-animate.js"></script>
     <script src="/JavaScript/pwa.js"></script>
+
+    <script>
+        const AUTH0_DOMAIN = "auth.stnetradio.com";
+        const AUTH0_CLIENT_ID = "U4t6BLF2INrgwJbNTRXMpYitLD1SjTCW";
+        let auth0Client = null;
+
+        window.onload = async () => {
+            auth0Client = await auth0.createAuth0Client({
+                domain: AUTH0_DOMAIN,
+                clientId: AUTH0_CLIENT_ID,
+                authorizationParams: { redirect_uri: window.location.href },
+                cacheLocation: 'localstorage'
+            });
+
+            if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
+                await auth0Client.handleRedirectCallback();
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            const isAuthenticated = await auth0Client.isAuthenticated();
+
+            if (isAuthenticated) {
+                showApp();
+            } else {
+                try {
+                    await auth0Client.getTokenSilently();
+                    showApp();
+                } catch (e) {
+                    auth0Client.loginWithRedirect();
+                }
+            }
+        };
+
+        async function showApp() {
+            document.getElementById("loading-view").classList.remove("active-view");
+            document.getElementById("app-view").classList.add("active-view");
+
+            const user = await auth0Client.getUser();
+            const navUserName = document.getElementById("nav-user-name");
+            if (navUserName && user) {
+                navUserName.innerHTML = `<i class="fa-regular fa-user"></i> ${user.name || user.email}`;
+            }
+        }
+
+        function logout() {
+            auth0Client.logout({ logoutParams: { returnTo: window.location.origin } });
+        }
+    </script>
 </body>
 
 </html>

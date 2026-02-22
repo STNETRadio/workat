@@ -57,29 +57,26 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Decorative glow orbs */
-        .hero-glow {
+        .hero-glow,
+        .hero-glow-2 {
             position: fixed;
-            top: -10%;
-            left: -10%;
             width: 50vw;
             height: 50vw;
-            background: radial-gradient(circle, rgba(247, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
             border-radius: 50%;
             z-index: -1;
             pointer-events: none;
         }
 
+        .hero-glow {
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle, rgba(247, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+        }
+
         .hero-glow-2 {
-            position: fixed;
             bottom: -10%;
             right: -10%;
-            width: 50vw;
-            height: 50vw;
             background: radial-gradient(circle, rgba(247, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
-            border-radius: 50%;
-            z-index: -1;
-            pointer-events: none;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -90,7 +87,6 @@
             }
         }
 
-        /* Animation */
         .fade-in-up {
             animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
@@ -107,7 +103,6 @@
             }
         }
 
-        /* Nav and Top Bar */
         .top-bar {
             position: absolute;
             top: 20px;
@@ -161,12 +156,6 @@
             position: relative;
         }
 
-        @media (prefers-color-scheme: dark) {
-            .container {
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            }
-        }
-
         .header {
             text-align: center;
             margin-bottom: 30px;
@@ -182,23 +171,6 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1.2;
-            padding-bottom: 5px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .header h1 {
-                background: linear-gradient(135deg, #fff, #bbb);
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-            }
-        }
-
-        .header p {
-            color: var(--text-muted);
-            font-size: 15px;
-            margin-top: 5px;
-            font-weight: 500;
         }
 
         .form-group {
@@ -210,7 +182,6 @@
             margin-bottom: 8px;
             font-weight: 600;
             font-size: 0.95rem;
-            color: var(--text-main);
         }
 
         .form-group input,
@@ -225,35 +196,22 @@
             font-family: inherit;
             transition: all 0.3s ease;
             box-sizing: border-box;
-            appearance: none;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-            line-height: 1.5;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(247, 0, 0, 0.1);
-            background-color: var(--bg);
-        }
-
-        @media (prefers-color-scheme: dark) {
-
-            .form-group input:focus,
-            .form-group textarea:focus {
-                box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.15);
-            }
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .template-section {
@@ -264,14 +222,7 @@
             margin-bottom: 30px;
         }
 
-        @media (prefers-color-scheme: dark) {
-            .template-section {
-                background-color: rgba(255, 51, 51, 0.05);
-                border-color: rgba(255, 51, 51, 0.2);
-            }
-        }
-
-        /* Custom Select */
+        /* Custom Select Styles */
         .custom-select {
             position: relative;
             margin-bottom: 24px;
@@ -285,44 +236,13 @@
             padding: 14px 16px;
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            color: var(--text-main);
-            font-size: 1rem;
             cursor: pointer;
-            user-select: none;
-            transition: all 0.3s ease;
-        }
-
-        .select-selected.placeholder-active {
-            color: var(--text-muted);
-        }
-
-        .select-selected.active {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(247, 0, 0, 0.1);
-            background-color: var(--bg);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .select-selected.active {
-                box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.15);
-            }
-        }
-
-        .select-selected .chevron {
-            color: var(--text-muted);
-            transition: transform 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .select-selected.active .chevron {
-            transform: rotate(180deg);
         }
 
         .select-items {
             position: absolute;
             background-color: var(--container-bg);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             top: calc(100% + 8px);
             left: 0;
             right: 0;
@@ -331,35 +251,16 @@
             border-radius: 12px;
             max-height: 250px;
             overflow-y: auto;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.2s ease, transform 0.2s ease;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .select-items {
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-            }
         }
 
         .select-hide {
-            opacity: 0;
-            transform: translateY(-10px);
-            pointer-events: none;
+            display: none;
         }
 
         .select-items div {
             padding: 14px 16px;
             cursor: pointer;
-            color: var(--text-main);
-            transition: background 0.2s ease;
             border-bottom: 1px solid var(--border-color);
-            font-size: 0.98rem;
-        }
-
-        .select-items div:last-child {
-            border-bottom: none;
         }
 
         .select-items div:hover {
@@ -367,13 +268,6 @@
             color: var(--primary);
         }
 
-        @media (prefers-color-scheme: dark) {
-            .select-items div:hover {
-                background-color: rgba(255, 51, 51, 0.1);
-            }
-        }
-
-        /* General Email Container */
         #generalEmailFields {
             display: none;
             background-color: var(--input-bg);
@@ -383,69 +277,15 @@
             margin-bottom: 24px;
         }
 
-        .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            font-family: 'Chillax-Variable', 'IBM Plex Sans Thai', sans-serif;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(247, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .btn {
-                box-shadow: 0 10px 20px rgba(255, 51, 51, 0.2);
-            }
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(247, 0, 0, 0.3);
-        }
-
-        .btn:disabled {
-            background: var(--border-color);
-            color: var(--text-muted);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
         .status-message {
             margin-top: 20px;
             padding: 16px;
             border-radius: 12px;
-            font-size: 0.95rem;
             text-align: center;
             display: none;
             font-weight: 500;
-            border: 1px solid transparent;
         }
 
-        #login-view,
         #app-view,
         #loading-view {
             display: none;
@@ -465,14 +305,195 @@
             padding: 12px;
             border-radius: 12px;
         }
+
+        /* Profile Dropdown Styles */
+        .user-profile-dropdown {
+            position: relative;
+        }
+
+        .profile-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+            color: var(--text-main, #111);
+            padding: 6px 16px 6px 6px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .profile-btn {
+                background: rgba(0, 0, 0, 0.2);
+                border-color: rgba(255, 255, 255, 0.15);
+                color: #eee;
+            }
+        }
+
+        .profile-btn:hover {
+            background: rgba(247, 0, 0, 0.05);
+            border-color: rgba(247, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .profile-btn img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-menu {
+            position: absolute;
+            top: calc(100% + 15px);
+            right: 0;
+            background: var(--bg);
+            border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .profile-menu {
+                border-color: rgba(255, 255, 255, 0.15);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .profile-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .profile-header {
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.02);
+            border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.05));
+            text-align: left;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .profile-header {
+                background: rgba(255, 255, 255, 0.02);
+                border-bottom-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        .profile-name {
+            display: block;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-main, #111);
+            margin-bottom: 4px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .profile-name {
+                color: #eee;
+            }
+        }
+
+        .profile-email {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .profile-email {
+                color: #aaa;
+            }
+        }
+
+        .profile-menu-item {
+            padding: 14px 16px;
+            color: var(--text-main, #111);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .profile-menu-item {
+                color: #eee;
+            }
+        }
+
+        .profile-menu-item:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .profile-menu-item:hover {
+                background: rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        .profile-menu-item i {
+            width: 16px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .profile-menu-item.logout-red {
+            color: var(--primary, #f70000);
+            border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.05));
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .profile-menu-item.logout-red {
+                border-top-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        .profile-menu-item.logout-red:hover {
+            background: rgba(247, 0, 0, 0.05);
+        }
     </style>
 </head>
 
 <body>
     <div class="top-bar" id="logout-container" style="display: none;">
-        <button type="button" class="btn-logout" id="btn-logout">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
-        </button>
+        <div class="user-profile-dropdown" id="user-profile-dropdown">
+            <button class="profile-btn" onclick="toggleProfileMenu(event)">
+                <img id="nav-user-picture" src="https://cdn.auth0.com/avatars/st.png" alt="Profile">
+                <span id="nav-user-name-text">Team</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="profile-menu" id="profile-menu">
+                <div class="profile-header">
+                    <span class="profile-name" id="menu-user-name">Team</span>
+                    <span class="profile-email" id="menu-user-email">...</span>
+                </div>
+                <a href="/profile.html" class="profile-menu-item"><i class="fa-regular fa-id-badge"></i> My Profile</a>
+                <a href="#" onclick="logout()" class="profile-menu-item logout-red"><i
+                        class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+            </div>
+        </div>
     </div>
 
     <div class="hero-glow" aria-hidden="true"></div>
@@ -487,12 +508,6 @@
 
             <div id="loading-view" class="active-view" style="text-align: center; color: var(--text-muted);">
                 <i class="fa-solid fa-spinner fa-spin"></i> Authenticating...
-            </div>
-
-            <div id="login-view">
-                <p style="text-align: center; color: var(--text-muted); margin-bottom: 24px;">Please log in with your
-                    STNET Radio team account.</p>
-                <button id="btn-login" class="btn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
             </div>
 
             <div id="app-view">
@@ -522,7 +537,7 @@
                                     (อีเมลทั่วไป)</div>
                             </div>
                         </div>
-                        <input type="hidden" id="templateSelect" required>
+                        <input type="hidden" id="templateSelect">
 
                         <div class="form-group" style="margin-bottom: 0;">
                             <label>Email Subject <span
@@ -544,63 +559,31 @@
 
                     <div id="generalEmailFields">
                         <div class="section-title">English Content</div>
-                        <div class="form-group">
-                            <label>Paragraph 1 (EN)</label>
-                            <textarea id="p1_en" placeholder="Hi there..."></textarea>
+                        <div class="form-group"><label>Paragraph 1 (EN)</label><textarea id="p1_en"></textarea></div>
+                        <div class="form-group"><label>Highlight Text Box (EN)</label><textarea id="hl_en"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label>Highlight Text Box (EN)</label>
-                            <textarea id="hl_en"
-                                placeholder="Important Notice details... (Leave blank if not needed)"></textarea>
+                        <div class="form-group"><label>Paragraph 2 (EN)</label><textarea id="p2_en"></textarea></div>
+                        <div class="section-title">Thai Content</div>
+                        <div class="form-group"><label>Paragraph 1 (TH)</label><textarea id="p1_th"></textarea></div>
+                        <div class="form-group"><label>Highlight Text Box (TH)</label><textarea id="hl_th"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label>Paragraph 2 (EN)</label>
-                            <textarea id="p2_en" placeholder="Further details..."></textarea>
-                        </div>
-
-                        <div class="section-title" style="margin-top: 30px;">Thai Content</div>
-                        <div class="form-group">
-                            <label>Paragraph 1 (TH)</label>
-                            <textarea id="p1_th" placeholder="สวัสดี..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Highlight Text Box (TH)</label>
-                            <textarea id="hl_th"
-                                placeholder="รายละเอียดประกาศสำคัญ... (เว้นว่างไว้หากไม่ต้องการให้แสดง)"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Paragraph 2 (TH)</label>
-                            <textarea id="p2_th" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
-                        </div>
-
-                        <div class="section-title" style="margin-top: 30px;">Sender Signature <span
-                                style="font-weight: normal; font-size: 12px; text-transform: none; color: var(--text-muted);">(ลายเซ็นผู้ส่ง)</span>
-                        </div>
+                        <div class="form-group"><label>Paragraph 2 (TH)</label><textarea id="p2_th"></textarea></div>
+                        <div class="section-title">Sender Signature</div>
                         <div class="grid-2">
-                            <div class="form-group">
-                                <label>Department (EN)</label>
-                                <input type="text" id="department_en" placeholder="e.g. HR Department">
+                            <div class="form-group"><label>Department (EN)</label><input type="text" id="department_en">
                             </div>
-                            <div class="form-group">
-                                <label>Department (TH)</label>
-                                <input type="text" id="department_th" placeholder="e.g. แผนกทรัพยากรบุคคล">
+                            <div class="form-group"><label>Department (TH)</label><input type="text" id="department_th">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Sender Name (TH)</label>
-                            <input type="text" id="senderName_th" placeholder="e.g. ทีมงาน STNET Radio">
+                        <div class="form-group"><label>Sender Name (TH)</label><input type="text" id="senderName_th">
                         </div>
                     </div>
 
                     <div class="grid-2">
-                        <div class="form-group">
-                            <label>Sender Display Name (EN)</label>
-                            <input type="text" id="senderName" value="STNET Radio HR" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Sender Email</label>
-                            <input type="email" id="senderEmail" value="hr@stnetradio.com" required>
-                        </div>
+                        <div class="form-group"><label>Sender Display Name</label><input type="text" id="senderName"
+                                value="STNET Radio HR" required></div>
+                        <div class="form-group"><label>Sender Email</label><input type="email" id="senderEmail"
+                                value="hr@stnetradio.com" required></div>
                     </div>
 
                     <div class="form-group" id="linkFieldContainer">
@@ -619,127 +602,133 @@
     </div>
 
     <script>
-        // --- ใส่ URL ของ Apps Script ล่าสุดตรงนี้ ---
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyHJObG6JjRlRgA9ILS2yvQX8vLeTWgdpm1UGR57vhMQhjCfeDndeywFoZKe8Ls5DQ_/exec";
-
         const AUTH0_DOMAIN = "auth.stnetradio.com";
         const AUTH0_CLIENT_ID = "U4t6BLF2INrgwJbNTRXMpYitLD1SjTCW";
         let auth0Client = null;
 
-        // Script ควบคุมการแสดงผลฟอร์ม
-        const customTemplateSelect = document.getElementById('customTemplateSelect');
-        const selectedTemplateText = document.getElementById('selectedTemplateText');
-        const templateOptionsList = document.getElementById('templateOptionsList');
-        const templateInput = document.getElementById('templateSelect');
-        const selectSelected = customTemplateSelect.querySelector('.select-selected');
-
-        // Dropdown toggle logic
-        customTemplateSelect.addEventListener('click', function () {
-            selectSelected.classList.toggle('active');
-            templateOptionsList.classList.toggle('select-hide');
-        });
-
-        // Handle selection
-        const templateOptions = templateOptionsList.querySelectorAll('div');
-        templateOptions.forEach(option => {
-            option.addEventListener('click', function (e) {
-                e.stopPropagation();
-
-                // Update text and value
-                selectedTemplateText.textContent = this.textContent;
-                templateInput.value = this.getAttribute('data-value');
-                selectSelected.classList.remove('placeholder-active');
-
-                // Close dropdown
-                selectSelected.classList.remove('active');
-                templateOptionsList.classList.add('select-hide');
-
-                // Trigger update logic
-                document.getElementById('emailSubject').value = this.getAttribute('data-subject');
-                const templateType = this.getAttribute('data-type');
-
-                if (templateType === 'general') {
-                    document.getElementById('generalEmailFields').style.display = 'block';
-                    document.getElementById('linkFieldContainer').style.display = 'none';
-                } else {
-                    document.getElementById('generalEmailFields').style.display = 'none';
-                    document.getElementById('linkFieldContainer').style.display = 'block';
-                }
-            });
-        });
-
-        // Close dropdown when outside click
-        document.addEventListener('click', function (e) {
-            if (!customTemplateSelect.contains(e.target)) {
-                selectSelected.classList.remove('active');
-                templateOptionsList.classList.add('select-hide');
-            }
-        });
-
+        // Auth0 Single Sign-On Logic
         window.onload = async () => {
             auth0Client = await auth0.createAuth0Client({
                 domain: AUTH0_DOMAIN,
                 clientId: AUTH0_CLIENT_ID,
-                authorizationParams: { redirect_uri: window.location.href }
+                authorizationParams: { redirect_uri: window.location.href },
+                cacheLocation: 'localstorage' // สำคัญเพื่อให้จำ Session ข้าม Tab
             });
 
+            // 1. Handle Callback from Auth0 Login
             if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
                 await auth0Client.handleRedirectCallback();
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
-            updateUI();
-        };
 
-        async function updateUI() {
+            // 2. Check current status
             const isAuthenticated = await auth0Client.isAuthenticated();
-            document.getElementById("loading-view").classList.remove("active-view");
 
             if (isAuthenticated) {
-                document.getElementById("logout-container").style.display = "block";
-                document.getElementById("login-view").classList.remove("active-view");
-                document.getElementById("app-view").classList.add("active-view");
-                const user = await auth0Client.getUser();
-                document.getElementById("user-profile-name").innerText = user.name;
-                document.getElementById("user-profile-email").innerText = user.email;
+                showApp();
             } else {
-                document.getElementById("logout-container").style.display = "none";
-                document.getElementById("app-view").classList.remove("active-view");
-                document.getElementById("login-view").classList.add("active-view");
+                // 3. ✨ Try Silent Login (SSO) or Force Login
+                try {
+                    await auth0Client.getTokenSilently();
+                    showApp();
+                } catch (e) {
+                    // Not logged in anywhere, redirect to Auth0
+                    auth0Client.loginWithRedirect();
+                }
+            }
+        };
+
+        async function showApp() {
+            document.getElementById("loading-view").classList.remove("active-view");
+            document.getElementById("logout-container").style.display = "block";
+            document.getElementById("app-view").classList.add("active-view");
+            const user = await auth0Client.getUser();
+            document.getElementById("user-profile-name").innerText = user.name;
+            document.getElementById("user-profile-email").innerText = user.email;
+
+            document.getElementById("nav-user-name-text").innerText = user.name || "Staff";
+            document.getElementById("menu-user-name").innerText = user.name || "Staff";
+            document.getElementById("menu-user-email").innerText = user.email || "";
+
+            if (user.picture) {
+                document.getElementById("nav-user-picture").src = user.picture;
             }
         }
 
-        document.getElementById("btn-login").addEventListener("click", () => auth0Client.loginWithRedirect());
-        document.getElementById("btn-logout").addEventListener("click", () => auth0Client.logout({ logoutParams: { returnTo: window.location.origin } }));
+        function logout() {
+            auth0Client.logout({ logoutParams: { returnTo: window.location.origin } });
+        }
 
-        document.getElementById('emailForm').addEventListener('submit', async function (e) {
+        function toggleProfileMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById("profile-menu");
+            menu.classList.toggle("active");
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (e) {
+            const dropdown = document.getElementById("user-profile-dropdown");
+            const menu = document.getElementById("profile-menu");
+            if (dropdown && !dropdown.contains(e.target)) {
+                menu.classList.remove("active");
+            }
+        });
+
+        // Dropdown Logic
+        const customTemplateSelect = document.getElementById('customTemplateSelect');
+        const selectedTemplateText = document.getElementById('selectedTemplateText');
+        const templateOptionsList = document.getElementById('templateOptionsList');
+        const templateInput = document.getElementById('templateSelect');
+
+        customTemplateSelect.onclick = () => templateOptionsList.classList.toggle('select-hide');
+
+        templateOptionsList.querySelectorAll('div').forEach(option => {
+            option.onclick = (e) => {
+                e.stopPropagation();
+                selectedTemplateText.textContent = option.textContent;
+                templateInput.value = option.getAttribute('data-value');
+                templateOptionsList.classList.add('select-hide');
+
+                document.getElementById('emailSubject').value = option.getAttribute('data-subject');
+                const isGeneral = option.getAttribute('data-type') === 'general';
+                document.getElementById('generalEmailFields').style.display = isGeneral ? 'block' : 'none';
+                document.getElementById('linkFieldContainer').style.display = isGeneral ? 'none' : 'block';
+            };
+        });
+
+        // Form Submit Logic
+        document.getElementById('emailForm').onsubmit = async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
             const statusDiv = document.getElementById('statusMessage');
+            const selectedTemplate = templateInput.value;
 
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
-            statusDiv.style.display = 'block'; statusDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
-            statusDiv.style.background = 'transparent';
-            statusDiv.style.borderColor = 'var(--primary)';
+            if (!selectedTemplate) {
+                alert("Please select a template first.");
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+            statusDiv.style.display = 'block';
             statusDiv.style.color = 'var(--text-main)';
+            statusDiv.innerHTML = 'Processing...';
 
             const payload = {
-                templateUrl: document.getElementById('templateSelect').value,
+                templateUrl: selectedTemplate,
                 emailSubject: document.getElementById('emailSubject').value,
                 applicantName: document.getElementById('applicantName').value,
                 email: document.getElementById('targetEmail').value,
                 fromName: document.getElementById('senderName').value,
                 fromEmail: document.getElementById('senderEmail').value,
                 actionLink: document.getElementById('actionLink').value,
-
-                // ข้อมูลสำหรับ General Template
                 p1_en: document.getElementById('p1_en').value,
                 hl_en: document.getElementById('hl_en').value,
                 p2_en: document.getElementById('p2_en').value,
                 p1_th: document.getElementById('p1_th').value,
                 hl_th: document.getElementById('hl_th').value,
                 p2_th: document.getElementById('p2_th').value,
-
-                // ข้อมูลลายเซ็น (Signature)
                 department_en: document.getElementById('department_en').value,
                 senderName_th: document.getElementById('senderName_th').value,
                 department_th: document.getElementById('department_th').value
@@ -748,37 +737,27 @@
             try {
                 const response = await fetch(GAS_API_URL, {
                     method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
                     body: JSON.stringify(payload)
                 });
-
                 const result = await response.json();
 
                 if (result.status === "success") {
-                    statusDiv.innerHTML = '<i class="fa-solid fa-circle-check"></i> Email sent successfully!';
-                    statusDiv.style.background = 'rgba(16, 185, 129, 0.1)';
-                    statusDiv.style.borderColor = 'transparent';
+                    statusDiv.innerHTML = 'Sent Successfully!';
                     statusDiv.style.color = 'var(--success)';
-
-                    // Clear fields
-                    document.getElementById('applicantName').value = '';
-                    document.getElementById('targetEmail').value = '';
-                    document.getElementById('actionLink').value = '';
+                    document.getElementById('emailForm').reset();
+                    selectedTemplateText.textContent = "-- Please select a template --";
                 } else {
-                    statusDiv.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Error: ' + (result.message || 'An error occurred while sending');
-                    statusDiv.style.background = 'rgba(217, 48, 37, 0.1)';
-                    statusDiv.style.borderColor = 'transparent';
+                    statusDiv.innerHTML = 'Error: ' + result.message;
                     statusDiv.style.color = 'var(--danger)';
                 }
-            } catch (error) {
-                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Unable to contact the API server';
-                statusDiv.style.background = 'rgba(217, 48, 37, 0.1)';
-                statusDiv.style.borderColor = 'transparent';
+            } catch (err) {
+                statusDiv.innerHTML = 'Network Error';
                 statusDiv.style.color = 'var(--danger)';
             } finally {
-                btn.disabled = false; btn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Send Email';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Send Email';
             }
-        });
+        };
     </script>
 </body>
 
