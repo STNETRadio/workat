@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>404 — Page Not Found | STNET Radio</title>
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+
+    <link rel="icon" href="/img/fav.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        /* CRITICAL: Prevent flash of wrong background */
+        :root { --bg: #ffffff; }
+        @media (prefers-color-scheme: dark) { :root { --bg: #000000; } }
+        html, body { background-color: var(--bg) !important; margin: 0; padding: 0; }
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/CSS/brand.css" />
+    <link rel="stylesheet" href="/CSS/404.css" />
+</head>
+
+<body>
+
+    <header>
+        <a href="/" class="brand">SNR Staff Portal</a>
+        <button id="hamburger-btn" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+        </button>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="https://email.stnetradio.com">Email</a></li>
+                <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="error-container" style="padding-top: 80px;">
+        <!-- Ambient glow orbs -->
+        <div style="position:fixed;top:-10%;left:-10%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(255,0,0,0.06) 0%,transparent 70%);border-radius:50%;pointer-events:none;z-index:0;"></div>
+        <div style="position:fixed;bottom:-10%;right:-10%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(255,0,0,0.06) 0%,transparent 70%);border-radius:50%;pointer-events:none;z-index:0;"></div>
+
+        <div class="content-wrapper" style="position:relative;z-index:1;">
+            <div class="huge-text">404</div>
+            <div class="sub-text">Page Not Found</div>
+            <p class="desc-text">
+                The page you're looking for doesn't exist<br>or has been moved to a new location.
+            </p>
+            <a href="/" class="btn-solid">
+                <i class="fa-solid fa-house" style="margin-right:8px;"></i>Back to Portal
+            </a>
+        </div>
+    </div>
+
+    <script src="/JavaScript/viewport-fix.js"></script>
+    <script src="/JavaScript/mobile-menu.js"></script>
+
+</body>
+
+</html>
