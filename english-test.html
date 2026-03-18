@@ -87,11 +87,98 @@
             display: block !important;
         }
 
-        .user-nav-profile {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-right: 15px;
+        .user-profile-dropdown { position: relative; }
+
+        /* Fixed floating profile bar */
+        .top-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
         }
+        @media (max-width: 700px) {
+            .top-bar { top: 12px; right: 12px; }
+        }
+
+        .profile-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(0,0,0,0.1);
+            color: #111;
+            padding: 6px 16px 6px 6px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        @media (prefers-color-scheme: dark) {
+            .profile-btn { background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.15); color: #eee; }
+        }
+        .profile-btn:hover { background: rgba(247,0,0,0.05); border-color: rgba(247,0,0,0.2); transform: translateY(-1px); }
+        .profile-btn img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+
+        .profile-menu {
+            position: absolute;
+            top: calc(100% + 15px);
+            right: 0;
+            background: var(--bg, #fff);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 10001;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        @media (prefers-color-scheme: dark) {
+            .profile-menu { background: #111; border-color: rgba(255,255,255,0.12); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        }
+        .profile-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .profile-header { padding: 16px; background: rgba(0,0,0,0.02); border-bottom: 1px solid rgba(0,0,0,0.05); text-align: left; }
+        @media (prefers-color-scheme: dark) {
+            .profile-header { background: rgba(255,255,255,0.02); border-bottom-color: rgba(255,255,255,0.05); }
+        }
+        .profile-name-label { display: block; font-weight: 600; font-size: 0.95rem; color: #111; margin-bottom: 4px; }
+        @media (prefers-color-scheme: dark) { .profile-name-label { color: #eee; } }
+        .profile-email-label { display: block; font-size: 0.8rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        @media (prefers-color-scheme: dark) { .profile-email-label { color: #aaa; } }
+
+        .profile-menu-item {
+            padding: 14px 16px;
+            color: #111;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-family: inherit;
+            text-align: left;
+        }
+        @media (prefers-color-scheme: dark) { .profile-menu-item { color: #eee; } }
+        .profile-menu-item:hover { background: rgba(0,0,0,0.03); }
+        @media (prefers-color-scheme: dark) { .profile-menu-item:hover { background: rgba(255,255,255,0.05); } }
+        .profile-menu-item i { width: 16px; text-align: center; opacity: 0.8; }
+        .profile-menu-item.logout-red { color: #f70000; border-top: 1px solid rgba(0,0,0,0.05); }
+        @media (prefers-color-scheme: dark) { .profile-menu-item.logout-red { border-top-color: rgba(255,255,255,0.05); } }
+        .profile-menu-item.logout-red:hover { background: rgba(247,0,0,0.05); }
 
         /* ═══════════════════════════════════════════════
            ENGLISH TEST — PAGE-SPECIFIC STYLES
@@ -394,25 +481,38 @@
     <div id="app-view">
 
         <header>
-            <a href="/staff/" class="brand">SNR Staff Portal</a>
+            <a href="/" class="brand">SNR Staff Portal</a>
             <button id="hamburger-btn" aria-label="Toggle navigation">
                 <span></span>
                 <span></span>
             </button>
             <nav>
                 <ul>
-                    <li><span class="user-nav-profile" id="nav-user-name"></span></li>
-                    <li><a href="/staff/">Home</a></li>
+                    <li><a href="/">Home</a></li>
                     <li><a href="https://email.stnetradio.com">Email</a></li>
                     <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
-                    <li><a href="https://drive.stnetradio.com">Drive</a></li>
-                    <li><a href="https://messages.stnetradio.com">Messages</a></li>
-                    <li><a href="https://docs.stnetradio.com">Documentation</a></li>
-                    <li><a href="#" onclick="logout()" style="color: #666;"><i
-                                class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></li>
                 </ul>
             </nav>
         </header>
+
+        <!-- Profile Dropdown - standalone, outside nav -->
+        <div class="top-bar" id="top-bar-profile" style="display:none;">
+            <div class="user-profile-dropdown" id="user-profile-dropdown">
+                <button class="profile-btn" onclick="toggleProfileMenu(event)">
+                    <img id="nav-user-picture" src="https://cdn.auth0.com/avatars/st.png" alt="Profile">
+                    <span id="nav-user-name">STNET ID</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size:0.75rem;"></i>
+                </button>
+                <div class="profile-menu" id="profile-menu">
+                    <div class="profile-header">
+                        <span class="profile-name-label" id="menu-user-name">Team</span>
+                        <span class="profile-email-label" id="menu-user-email">...</span>
+                    </div>
+                    <a href="/profile.html" class="profile-menu-item"><i class="fa-regular fa-id-badge"></i> My Profile</a>
+                    <button onclick="logout()" class="profile-menu-item logout-red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+                </div>
+            </div>
+        </div>
 
         <div class="test-hero">
             <!-- Decorative glow orbs -->
@@ -420,7 +520,7 @@
             <div class="hero-glow-2" aria-hidden="true"></div>
 
             <div class="breadcrumb fade-in-up">
-                <a href="/staff/">Staff Portal</a> &gt; English Test
+                <a href="/">Staff Portal</a> &gt; English Test
             </div>
             <h1 class="fade-in-up delay-1">STNET Radio <br>English Test</h1>
             <p class="fade-in-up delay-2">Powered by EF SET</p>
@@ -554,15 +654,29 @@
             document.getElementById("app-view").classList.add("active-view");
 
             const user = await auth0Client.getUser();
-            const navUserName = document.getElementById("nav-user-name");
-            if (navUserName && user) {
-                navUserName.innerHTML = `<i class="fa-regular fa-user"></i> ${user.name || user.email}`;
+            if (user) {
+                document.getElementById("nav-user-name").innerText = user.name || "STNET ID";
+                document.getElementById("menu-user-name").innerText = user.name || "STNET ID";
+                document.getElementById("menu-user-email").innerText = user.email || "";
+                if (user.picture) document.getElementById("nav-user-picture").src = user.picture;
+                document.getElementById("top-bar-profile").style.display = "block";
             }
         }
 
         function logout() {
             auth0Client.logout({ logoutParams: { returnTo: window.location.origin } });
         }
+
+        function toggleProfileMenu(e) {
+            e.stopPropagation();
+            document.getElementById("profile-menu").classList.toggle("active");
+        }
+
+        document.addEventListener('click', function (e) {
+            const dropdown = document.getElementById("user-profile-dropdown");
+            const menu = document.getElementById("profile-menu");
+            if (dropdown && !dropdown.contains(e.target)) menu.classList.remove("active");
+        });
     </script>
 </body>
 

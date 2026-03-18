@@ -25,11 +25,18 @@
         /* CRITICAL: Inline to prevent flash of wrong background */
         :root {
             --bg: #ffffff;
+            /* Fix card visibility in light mode (staff.css uses white-on-white border) */
+            --card-glass: rgba(255, 255, 255, 0.75);
+            --card-glass-border: rgba(0, 0, 0, 0.08);
+            --subtext: #333333;
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #000000;
+                --card-glass: rgba(20, 20, 30, 0.6);
+                --card-glass-border: rgba(255, 255, 255, 0.08);
+                --subtext: #b0b0c0;
             }
         }
 
@@ -215,12 +222,9 @@
         </button>
         <nav>
             <ul>
-                <li><a href="/staff/">Home</a></li>
+                <li><a href="/">Home</a></li>
                 <li><a href="https://email.stnetradio.com">Email</a></li>
                 <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
-                <li><a href="https://drive.stnetradio.com">Drive</a></li>
-                <li><a href="https://messages.stnetradio.com">Messages</a></li>
-                <li><a href="https://docs.stnetradio.com">Documentation</a></li>
             </ul>
         </nav>
     </header>
@@ -239,7 +243,7 @@
             <p>Thank you for using STNET ID.<br>You have been safely logged out.</p>
 
             <div class="controls">
-                <a href="/staff/" class="btn-outline">Back to Home</a>
+                <a href="/" class="btn-outline">Back to Home</a>
             </div>
         </div>
 

@@ -110,6 +110,38 @@
             z-index: 100;
         }
 
+        .top-bar-left {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        .btn-back {
+            background: var(--container-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 18px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(247, 0, 0, 0.05);
+            border-color: rgba(247, 0, 0, 0.2);
+            color: var(--primary);
+            transform: translateX(-2px);
+        }
+
         .btn-logout {
             background: var(--container-bg);
             backdrop-filter: blur(10px);
@@ -477,6 +509,13 @@
 </head>
 
 <body>
+    <!-- Back Button - top left -->
+    <div class="top-bar-left" id="back-btn-container" style="display: none;">
+        <a href="/" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+    </div>
+
     <div class="top-bar" id="logout-container" style="display: none;">
         <div class="user-profile-dropdown" id="user-profile-dropdown">
             <button class="profile-btn" onclick="toggleProfileMenu(event)">
@@ -642,6 +681,7 @@
         async function showApp() {
             document.getElementById("loading-view").classList.remove("active-view");
             document.getElementById("logout-container").style.display = "block";
+            document.getElementById("back-btn-container").style.display = "block";
             document.getElementById("app-view").classList.add("active-view");
             const user = await auth0Client.getUser();
             document.getElementById("user-profile-name").innerText = user.name;
