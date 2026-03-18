@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Force Logout | STNET ID</title>
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="icon" href="/img/fav.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.65);
+            --card-border: rgba(255, 255, 255, 0.6);
+            --text: #111;
+            --muted: #666;
+            --red: #f70000;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #000000;
+                --card-bg: rgba(20, 20, 30, 0.65);
+                --card-border: rgba(255, 255, 255, 0.08);
+                --text: #eee;
+                --muted: #aaa;
+            }
+        }
+
+        html,
+        body {
+            background-color: var(--bg) !important;
+            margin: 0;
+            padding: 0;
+            min-height: 100dvh;
+            font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif;
+            color: var(--text);
+        }
+
+        /* Glow orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100dvh;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 3rem 2.5rem;
+            max-width: 460px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .card {
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--red);
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin: 0 0 2.5rem;
+            line-height: 1.6;
+        }
+
+        /* Step list */
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.03);
+            font-size: 0.9rem;
+            color: var(--muted);
+            transition: all 0.35s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .step-item {
+                background: rgba(255, 255, 255, 0.04);
+            }
+        }
+
+        .step-item.done {
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .step-item.active {
+            color: var(--text);
+            background: rgba(247, 0, 0, 0.06);
+        }
+
+        .step-icon {
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Buttons */
+        .btn-force {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--red), #cc0000);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 6px 24px rgba(247, 0, 0, 0.25);
+            margin-bottom: 12px;
+        }
+
+        .btn-force:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(247, 0, 0, 0.38);
+        }
+
+        .btn-force:disabled {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .btn-force:disabled {
+                background: rgba(255, 255, 255, 0.08);
+            }
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 0.85rem 2rem;
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .btn-secondary {
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(247, 0, 0, 0.2);
+            color: var(--red);
+        }
+
+        #status-msg {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-top: 1rem;
+            min-height: 20px;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.82rem;
+            color: var(--warning);
+            text-align: left;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Glow orbs -->
+    <div class="orb"
+        style="top:-10%;left:-10%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(255,0,0,0.07) 0%,transparent 70%);">
+    </div>
+    <div class="orb"
+        style="bottom:-10%;right:-10%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(255,0,0,0.07) 0%,transparent 70%);">
+    </div>
+
+    <div class="page-wrapper">
+        <div class="card">
+            <div class="card-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <h1>Force Logout</h1>
+            <p class="subtitle">Clears all session data and signs you out completely,<br>including STNET ID and Google Workspace.</p>
+
+            <div class="warning-box">
+                <i class="fa-solid fa-triangle-exclamation" style="flex-shrink:0; margin-top:2px;"></i>
+                <span>Use this when normal logout doesn't work or you're unable to sign in again with your STNET ID account.</span>
+            </div>
+
+            <button class="btn-force" id="btn-force" onclick="forceLogout()">
+                <i class="fa-solid fa-power-off"></i> Force Logout Now
+            </button>
+
+            <a href="/" class="btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Back (Cancel)
+            </a>
+
+            <p id="status-msg"></p>
+        </div>
+    </div>
+
+    <script>
+        const AUTH0_DOMAIN = "auth.stnetradio.com";
+        const AUTH0_CLIENT_ID = "U4t6BLF2INrgwJbNTRXMpYitLD1SjTCW";
+
+        function setStep(id, state) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.className = "step-item " + state;
+            const icon = el.querySelector(".step-icon");
+            if (state === "done") icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            if (state === "active") icon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+        }
+
+        function setStatus(msg) {
+            document.getElementById("status-msg").innerText = msg;
+        }
+
+        async function forceLogout() {
+            const btn = document.getElementById("btn-force");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+
+            // ─── Step 1: Clear Auth0 SDK cache ───────────────────────────
+            setStep("step-1", "active");
+            try {
+                const auth0Client = await auth0.createAuth0Client({
+                    domain: AUTH0_DOMAIN,
+                    clientId: AUTH0_CLIENT_ID,
+                    cacheLocation: "localstorage"
+                });
+                // Try silent logout first to clear SDK state
+                try { await auth0Client.getTokenSilently({ cacheMode: "off" }); } catch (_) { }
+            } catch (_) { }
+            setStep("step-1", "done");
+            await delay(300);
+
+            // ─── Step 2: Nuke localStorage & sessionStorage ───────────────
+            setStep("step-2", "active");
+            try {
+                // Remove all Auth0-related keys from localStorage
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.startsWith("@@auth0") || key.includes(AUTH0_DOMAIN) || key.includes(AUTH0_CLIENT_ID))) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(k => localStorage.removeItem(k));
+                sessionStorage.clear();
+            } catch (_) { }
+            setStep("step-2", "done");
+            await delay(300);
+
+            // ─── Step 3: Auth0 federated logout (clears Google session) ──
+            setStep("step-3", "active");
+            setStatus("Redirecting to Auth0...");
+            await delay(400);
+
+            // Use federated=true to also sign out from the upstream IdP (Google)
+            const returnTo = encodeURIComponent(window.location.origin + "/logout.html");
+            const logoutUrl =
+                `https://${AUTH0_DOMAIN}/v2/logout` +
+                `?client_id=${AUTH0_CLIENT_ID}` +
+                `&returnTo=${returnTo}` +
+                `&federated`;
+
+            window.location.href = logoutUrl;
+        }
+
+        function delay(ms) {
+            return new Promise(res => setTimeout(res, ms));
+        }
+    </script>
+</body>
+
+</html>
