@@ -7,6 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+@font-face {
+  font-family: 'Chillax-Variable';
+  src: url('https://stnetradio.com/font/Chillax-Variable.woff') format('woff');
+  font-weight: 100 900;
+  font-display: swap;
+}
+</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
 :root {
@@ -25,6 +33,7 @@
   --mono: 'IBM Plex Mono', monospace;
   --sans: 'Inter', 'IBM Plex Sans Thai', sans-serif;
   --display: 'Syne', sans-serif;
+  --chillax: 'Chillax-Variable', sans-serif;
   --radius: 12px;
   --radius-lg: 20px;
 }
@@ -163,11 +172,11 @@ body::before {
 .wl-logo-mark i { color: #fff; font-size: 0.9rem; }
 
 .wl-logo-text {
-  font-family: var(--display);
-  font-size: 1rem;
-  font-weight: 800;
+  font-family: var(--chillax);
+  font-size: 1.1rem;
+  font-weight: 700;
   color: var(--text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .wl-logo-text span { color: var(--red); }
@@ -463,12 +472,12 @@ body::before {
 }
 
 .topbar-brand {
-  font-family: var(--display);
+  font-family: var(--chillax);
   font-size: 1.15rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text);
   text-decoration: none;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   display: flex; align-items: center; gap: 10px;
   flex-shrink: 0;
 }
