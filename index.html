@@ -1,698 +1,1462 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>STNET ID Staff Portal | STNET Radio</title>
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="apple-touch-startup-image" href="/img/STNET-App.png">
-    <link rel="manifest" href="/manifest.json">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>STNET ID Staff Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+:root {
+  --red: #e8000f;
+  --red-dim: #8a000a;
+  --red-glow: rgba(232,0,15,0.18);
+  --bg: #0a0a0c;
+  --surface: #111116;
+  --surface-2: #18181f;
+  --surface-3: #1e1e28;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(232,0,15,0.35);
+  --text: #f0f0f5;
+  --text-2: #9090a0;
+  --text-3: #55556a;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Inter', 'IBM Plex Sans Thai', sans-serif;
+  --display: 'Syne', sans-serif;
+  --radius: 12px;
+  --radius-lg: 20px;
+}
 
-    <link rel="icon" href="/img/fav.ico" type="image/x-icon" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet" />
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 
-    <style>
-        /* CRITICAL: Inline to prevent flash of wrong background */
-        :root {
-            --bg: #ffffff;
-            --red: #f70000;
-        }
+html {
+  background: var(--bg);
+  min-height: 100dvh;
+  scroll-behavior: smooth;
+}
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #000000;
-            }
-        }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-        html {
-            background-color: var(--bg) !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            min-height: 100dvh !important;
-            height: 100% !important;
-        }
+/* ─── GRID NOISE TEXTURE ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.022;
+  pointer-events: none;
+  z-index: 0;
+}
 
-        body {
-            background-color: var(--bg) !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            min-height: 100dvh !important;
-            overflow-x: hidden !important;
-        }
+/* ─── LOADING SCREEN ─── */
+#loading-screen {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--bg);
+  z-index: 9999;
+  gap: 16px;
+}
 
-        /* Loading Screen Style */
-        #loading-screen {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-        }
+.loader-mark {
+  width: 48px; height: 48px;
+  border: 2px solid var(--surface-3);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
 
-        #loading-screen i {
-            font-size: 2rem;
-            color: var(--red);
-            margin-bottom: 15px;
-        }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Profile Dropdown - Fixed Top Right */
-        .top-bar {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-        }
+.loader-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 
-        @media (max-width: 700px) {
-            .top-bar {
-                top: 12px;
-                right: 12px;
-            }
-        }
+/* ─── WELCOME / LOGIN — SPLIT SCREEN ─── */
+#welcome-screen {
+  display: none;
+  position: fixed; inset: 0;
+  z-index: 9998;
+  overflow: hidden;
+}
 
-        /* Profile Dropdown */
-        .user-profile-dropdown {
-            position: relative;
-        }
+/* Left panel — brand stage */
+.wl-left {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 55%;
+  background: #080809;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 52px;
+  overflow: hidden;
+}
 
-        .profile-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            color: #111;
-            padding: 6px 16px 6px 6px;
-            border-radius: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
+/* animated scan line */
+.wl-left::after {
+  content: '';
+  position: absolute;
+  top: -100%; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,0,15,0.4), transparent);
+  animation: scanline 6s linear infinite;
+  pointer-events: none;
+}
 
-        @media (prefers-color-scheme: dark) {
-            .profile-btn {
-                background: rgba(0, 0, 0, 0.2);
-                border-color: rgba(255, 255, 255, 0.15);
-                color: #eee;
-            }
-        }
+@keyframes scanline {
+  from { top: -2%; }
+  to   { top: 102%; }
+}
 
-        .profile-btn:hover {
-            background: rgba(247, 0, 0, 0.05);
-            border-color: rgba(247, 0, 0, 0.2);
-            transform: translateY(-1px);
-        }
+/* grid overlay on left */
+.wl-grid {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.018) 60px),
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.018) 60px);
+  pointer-events: none;
+}
 
-        .profile-btn img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+/* red corner accent */
+.wl-corner {
+  position: absolute;
+  top: 0; right: 0;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle at top right, rgba(232,0,15,0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
 
-        .profile-menu {
-            position: absolute;
-            top: calc(100% + 15px);
-            right: 0;
-            background: var(--bg, #fff);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            width: 220px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 10001;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+.wl-bottom-glow {
+  position: absolute;
+  bottom: -80px; left: -40px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(232,0,15,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
 
-        @media (prefers-color-scheme: dark) {
-            .profile-menu {
-                background: #111;
-                border-color: rgba(255, 255, 255, 0.12);
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            }
-        }
+/* logo row */
+.wl-logo {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; gap: 12px;
+}
 
-        .profile-menu.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
+.wl-logo-mark {
+  width: 36px; height: 36px;
+  background: var(--red);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
 
-        .profile-header {
-            padding: 16px;
-            background: rgba(0, 0, 0, 0.02);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            text-align: left;
-        }
+.wl-logo-mark i { color: #fff; font-size: 0.9rem; }
 
-        @media (prefers-color-scheme: dark) {
-            .profile-header {
-                background: rgba(255, 255, 255, 0.02);
-                border-bottom-color: rgba(255, 255, 255, 0.05);
-            }
-        }
+.wl-logo-text {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
 
-        .profile-name-label {
-            display: block;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #111;
-            margin-bottom: 4px;
-        }
+.wl-logo-text span { color: var(--red); }
 
-        @media (prefers-color-scheme: dark) {
-            .profile-name-label { color: #eee; }
-        }
+/* center stage */
+.wl-stage {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 40px 0;
+}
 
-        .profile-email-label {
-            display: block;
-            font-size: 0.8rem;
-            color: #666;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+.wl-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--red);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 10px;
+  animation: fadeInLeft 0.7s 0.1s both;
+}
 
-        @media (prefers-color-scheme: dark) {
-            .profile-email-label { color: #aaa; }
-        }
+.wl-label::before {
+  content: '';
+  display: block; width: 24px; height: 1px;
+  background: var(--red);
+}
 
-        .profile-menu-item {
-            padding: 14px 16px;
-            color: #111;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: background 0.2s;
-            background: none;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            font-family: inherit;
-            text-align: left;
-        }
+.wl-big-title {
+  font-family: var(--display);
+  font-size: clamp(4rem, 7vw, 6.5rem);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+  animation: fadeInLeft 0.7s 0.2s both;
+}
 
-        @media (prefers-color-scheme: dark) {
-            .profile-menu-item { color: #eee; }
-        }
+.wl-big-title em {
+  color: var(--red);
+  font-style: normal;
+  display: block;
+}
 
-        .profile-menu-item:hover { background: rgba(0, 0, 0, 0.03); }
+.wl-desc {
+  font-size: 0.88rem;
+  color: var(--text-3);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width: 320px;
+  animation: fadeInLeft 0.7s 0.3s both;
+}
 
-        @media (prefers-color-scheme: dark) {
-            .profile-menu-item:hover { background: rgba(255, 255, 255, 0.05); }
-        }
+/* feature pills */
+.wl-pills {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 32px;
+  animation: fadeInLeft 0.7s 0.4s both;
+}
 
-        .profile-menu-item i {
-            width: 16px;
-            text-align: center;
-            opacity: 0.8;
-        }
+.wl-pill {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 6px 14px;
+  font-size: 0.72rem;
+  color: var(--text-2);
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+}
 
-        .profile-menu-item.logout-red {
-            color: #f70000;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-        }
+.wl-pill i { color: var(--red); font-size: 0.68rem; }
 
-        @media (prefers-color-scheme: dark) {
-            .profile-menu-item.logout-red { border-top-color: rgba(255, 255, 255, 0.05); }
-        }
+/* bottom status bar */
+.wl-status {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  animation: fadeInLeft 0.7s 0.5s both;
+}
 
-        .profile-menu-item.logout-red:hover { background: rgba(247, 0, 0, 0.05); }
+.wl-status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.6);
+  flex-shrink: 0;
+}
 
-        @media (min-width: 701px) {
-            .header-right nav ul {
-                flex-wrap: nowrap !important;
-            }
-        }
+/* Right panel — login form */
+.wl-right {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 45%;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 48px 52px;
+  border-left: 1px solid var(--border);
+}
 
-        /* Welcome / Login Screen */
-        #welcome-screen {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100dvh;
-            padding: 40px 20px;
-            text-align: center;
-            font-family: 'Inter', sans-serif;
-        }
+.wl-right::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(232,0,15,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
 
-        .welcome-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 28px;
-            padding: 3rem 2.5rem;
-            max-width: 440px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
-            position: relative;
-            overflow: hidden;
-        }
+.wl-form-wrap {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 340px;
+  animation: fadeInRight 0.7s 0.25s both;
+}
 
-        @media (prefers-color-scheme: dark) {
-            .welcome-card {
-                background: rgba(20, 20, 30, 0.6);
-                border-color: rgba(255, 255, 255, 0.08);
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            }
-        }
+.wl-form-tag {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--text-3);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
 
-        .welcome-logo {
-            font-size: 3rem;
-            color: var(--red);
-            margin-bottom: 1.5rem;
-        }
+.wl-form-title {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
 
-        .welcome-title {
-            font-family: 'Chillax-Variable', 'IBM Plex Sans Thai', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--red);
-            margin: 0 0 0.5rem;
-            letter-spacing: -1px;
-        }
+.wl-form-sub {
+  font-size: 0.82rem;
+  color: var(--text-3);
+  font-weight: 300;
+  margin-bottom: 36px;
+  line-height: 1.6;
+}
 
-        .welcome-sub {
-            font-size: 0.95rem;
-            color: var(--subtext, #555);
-            margin: 0 0 2.5rem;
-            opacity: 0.7;
-            letter-spacing: 0.5px;
-        }
+/* Divider */
+.wl-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 28px 0;
+  position: relative;
+}
 
-        @media (prefers-color-scheme: dark) {
-            .welcome-sub { color: #aaa; opacity: 0.8; }
-        }
+.wl-divider::after {
+  content: 'OR CONTINUE WITH';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  background: var(--bg);
+  padding: 0 12px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--text-3);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
 
-        .btn-signin {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--red), #cc0000);
-            color: #fff;
-            border: none;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            box-shadow: 0 6px 24px rgba(255, 0, 0, 0.25);
-            position: relative;
-            overflow: hidden;
-        }
+/* SSO Button */
+.btn-sso {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.87rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: border-color 0.22s, background 0.22s, transform 0.15s;
+  letter-spacing: 0.01em;
+  margin-bottom: 12px;
+}
 
-        .btn-signin:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 32px rgba(255, 0, 0, 0.38);
-        }
+.btn-sso:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-2);
+  transform: translateY(-1px);
+}
 
-        .btn-signin:active { transform: translateY(0); }
+.btn-sso i { font-size: 0.85rem; }
 
-        .welcome-note {
-            margin-top: 1.5rem;
-            font-size: 0.8rem;
-            color: var(--subtext, #888);
-            opacity: 0.5;
-        }
+/* Primary login button */
+.btn-login {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(232,0,15,0.28);
+  letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
+}
 
-        /* Welcome screen glow orbs */
-        #welcome-screen .orb {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-        }
-    </style>
+.btn-login::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+  pointer-events: none;
+}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="/CSS/brand.css" />
-    <link rel="stylesheet" href="/CSS/staff.css" />
-    <link rel="stylesheet" href="/CSS/footer.css" />
+.btn-login:hover {
+  background: #f50010;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(232,0,15,0.42);
+}
 
-    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+.btn-login:active { transform: translateY(0); }
+
+.wl-note {
+  margin-top: 24px;
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  color: var(--text-3);
+  text-align: center;
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+  display: flex; align-items: flex-start; gap: 7px;
+}
+
+.wl-note i { margin-top: 1px; color: var(--text-3); flex-shrink: 0; }
+
+/* Animations */
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 768px) {
+  .wl-left {
+    width: 100%; height: 42%;
+    bottom: 58%;
+    padding: 32px 28px;
+  }
+  .wl-right {
+    width: 100%; height: 60%;
+    top: 40%; left: 0;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding: 32px 28px;
+  }
+  .wl-big-title { font-size: 3rem; }
+  .wl-pills { display: none; }
+  .wl-desc { display: none; }
+  .wl-status { display: none; }
+  .wl-stage { padding: 16px 0; }
+}
+
+/* ─── MAIN APP ─── */
+#protected-content { display: none; position: relative; z-index: 1; }
+
+/* ─── TOPBAR ─── */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(10,10,12,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 28px;
+  z-index: 1000;
+  gap: 0;
+}
+
+.topbar-brand {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.03em;
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0;
+}
+
+.topbar-brand .brand-dot { color: var(--red); }
+
+.topbar-divider {
+  width: 1px; height: 22px;
+  background: var(--border);
+  margin: 0 20px;
+}
+
+.topbar-nav {
+  display: flex; gap: 2px;
+  list-style: none;
+  flex: 1;
+}
+
+.topbar-nav a {
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: 0.83rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.topbar-nav a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+.topbar-nav a.active { color: var(--text); }
+
+.topbar-right {
+  display: flex; align-items: center; gap: 10px;
+  margin-left: auto;
+}
+
+/* Profile button */
+.profile-trigger {
+  display: flex; align-items: center; gap: 9px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 5px 14px 5px 5px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  font-family: var(--sans);
+}
+
+.profile-trigger:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-3);
+}
+
+.profile-trigger img {
+  width: 28px; height: 28px;
+  border-radius: 50%; object-fit: cover;
+}
+
+.profile-trigger span {
+  font-size: 0.82rem; font-weight: 500;
+  color: var(--text);
+  max-width: 120px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.profile-trigger i { font-size: 0.68rem; color: var(--text-3); }
+
+/* Profile dropdown */
+.profile-wrap { position: relative; }
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 230px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+  opacity: 0; visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
+  z-index: 2000;
+}
+
+.profile-dropdown.open {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+
+.pd-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.pd-name {
+  font-weight: 600; font-size: 0.88rem; color: var(--text);
+  display: block; margin-bottom: 3px;
+}
+
+.pd-email {
+  font-size: 0.75rem; color: var(--text-3);
+  font-family: var(--mono);
+  display: block;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.pd-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px;
+  color: var(--text-2); text-decoration: none;
+  font-size: 0.85rem; font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+  background: none; border: none; cursor: pointer;
+  width: 100%; font-family: var(--sans); text-align: left;
+}
+
+.pd-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+
+.pd-item i { width: 14px; text-align: center; font-size: 0.78rem; }
+
+.pd-item.red {
+  color: var(--red);
+  border-top: 1px solid var(--border);
+}
+
+.pd-item.red:hover { background: rgba(232,0,15,0.07); }
+
+/* ─── HERO ─── */
+.hero {
+  padding-top: 60px;
+  position: relative;
+  overflow: hidden;
+  min-height: 280px;
+  display: flex; align-items: flex-end;
+}
+
+.hero-canvas {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 70% 20%, rgba(232,0,15,0.06) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
+}
+
+.hero-lines {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.02) 60px);
+  mask-image: linear-gradient(180deg, transparent, rgba(0,0,0,0.6), transparent);
+}
+
+.hero-inner {
+  position: relative; z-index: 2;
+  padding: 40px 40px 48px;
+  width: 100%;
+}
+
+.hero-tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.hero-tag::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--red-dim), transparent);
+  max-width: 120px;
+}
+
+.hero-title {
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.hero-title em { color: var(--red); font-style: normal; }
+
+.hero-welcome {
+  font-size: 0.92rem;
+  color: var(--text-2);
+  font-weight: 300;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.hero-welcome strong {
+  color: var(--text); font-weight: 500;
+}
+
+/* ─── MAIN LAYOUT ─── */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 28px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* ─── SECTION HEADER ─── */
+.sec-header {
+  display: flex; align-items: baseline; gap: 14px;
+  margin-bottom: 20px;
+}
+
+.sec-title {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.sec-count {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text-3);
+  letter-spacing: 0.1em;
+}
+
+/* ─── QUICK ACCESS ─── */
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 16px;
+  text-decoration: none;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px;
+  transition: border-color 0.22s, background 0.22s, transform 0.22s;
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+
+.tool-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(232,0,15,0.06), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tool-card:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+}
+
+.tool-card:hover::before { opacity: 1; }
+
+.tool-icon {
+  font-size: 1.4rem;
+  color: var(--red);
+  transition: transform 0.22s;
+}
+
+.tool-card:hover .tool-icon { transform: scale(1.1); }
+
+.tool-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+}
+
+.tool-desc {
+  font-size: 0.72rem;
+  color: var(--text-3);
+  display: block;
+}
+
+/* ─── INFO GRID ─── */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.card-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface-2);
+}
+
+.card-head i { color: var(--red); font-size: 0.85rem; }
+
+.card-head h3 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  font-family: var(--mono);
+}
+
+/* Status */
+.status-list { padding: 8px 0; }
+
+.status-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background 0.15s;
+}
+
+.status-row:last-child { border-bottom: none; }
+.status-row:hover { background: rgba(255,255,255,0.02); }
+
+.status-label {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.82rem; color: var(--text-2);
+}
+
+.status-label i { width: 14px; text-align: center; color: var(--text-3); font-size: 0.75rem; }
+
+.status-badge {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.st-ok {
+  color: #22c55e;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.2);
+}
+
+.status-foot {
+  padding: 10px 20px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text-3);
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+/* Resources */
+.resource-list { padding: 6px 0; }
+
+.resource-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 20px;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background 0.15s;
+  group: true;
+}
+
+.resource-item:last-child { border-bottom: none; }
+.resource-item:hover { background: rgba(255,255,255,0.03); }
+
+.ri-icon {
+  width: 32px; height: 32px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.resource-item:hover .ri-icon {
+  border-color: var(--border-hover);
+  background: rgba(232,0,15,0.08);
+}
+
+.ri-icon i { font-size: 0.75rem; color: var(--red); }
+
+.ri-text strong {
+  display: block; font-size: 0.82rem; font-weight: 500;
+  color: var(--text); margin-bottom: 2px;
+}
+
+.ri-text span {
+  display: block; font-size: 0.72rem; color: var(--text-3);
+}
+
+.ri-arrow {
+  margin-left: auto; color: var(--text-3); font-size: 0.7rem;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.resource-item:hover .ri-arrow { opacity: 1; transform: translateX(0); }
+
+/* ─── ANNOUNCEMENTS ─── */
+.announce-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.announce-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: border-color 0.22s, background 0.22s;
+  position: relative;
+  overflow: hidden;
+}
+
+.announce-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.announce-card:hover { border-color: var(--border-hover); background: var(--surface-2); }
+.announce-card:hover::after { transform: scaleX(1); }
+
+.ac-badge {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  background: rgba(232,0,15,0.1);
+  border: 1px solid rgba(232,0,15,0.2);
+  border-radius: 4px;
+  padding: 2px 7px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.ac-title {
+  font-size: 0.92rem; font-weight: 600;
+  color: var(--text); margin-bottom: 6px;
+}
+
+.ac-body {
+  font-size: 0.8rem; color: var(--text-2);
+  line-height: 1.6; font-weight: 300;
+  margin-bottom: 14px;
+}
+
+.ac-foot {
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.ac-date {
+  font-family: var(--mono);
+  font-size: 0.67rem; color: var(--text-3);
+}
+
+.ac-link {
+  font-size: 0.75rem; color: var(--red);
+  text-decoration: none; font-weight: 500;
+  display: flex; align-items: center; gap: 5px;
+  transition: gap 0.2s;
+}
+
+.ac-link:hover { gap: 8px; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 28px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-brand {
+  font-family: var(--display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-3);
+  letter-spacing: -0.02em;
+}
+
+.footer-brand span { color: var(--red); }
+
+.footer-copy {
+  font-size: 0.75rem; color: var(--text-3);
+  font-family: var(--mono);
+}
+
+.footer-links { display: flex; gap: 20px; }
+.footer-links a {
+  font-size: 0.75rem; color: var(--text-3);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--text-2); }
+
+/* ─── MOBILE HAMBURGER ─── */
+.hamburger {
+  display: none;
+  flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 6px;
+  margin-left: auto;
+}
+
+.hamburger span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--text-2); border-radius: 2px;
+  transition: all 0.25s;
+}
+
+/* ─── MOBILE NAV DRAWER ─── */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0; top: 60px;
+  background: rgba(10,10,12,0.97);
+  backdrop-filter: blur(20px);
+  z-index: 999;
+  flex-direction: column;
+  padding: 20px 28px;
+  gap: 4px;
+}
+
+.mobile-nav.open { display: flex; }
+
+.mobile-nav a {
+  padding: 14px 0;
+  color: var(--text-2);
+  font-size: 1rem; font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.2s;
+}
+
+.mobile-nav a:hover { color: var(--text); }
+
+/* ─── ANIMATIONS ─── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-up.visible {
+  opacity: 1; transform: translateY(0);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .quick-grid { grid-template-columns: repeat(3, 1fr); }
+  .info-grid { grid-template-columns: 1fr; }
+  .announce-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 700px) {
+  .topbar { padding: 0 16px; }
+  .topbar-divider, .topbar-nav { display: none; }
+  .hamburger { display: flex; }
+  .hero-inner { padding: 28px 20px 36px; }
+  .main { padding: 28px 16px 60px; gap: 36px; }
+  .quick-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  footer { flex-direction: column; text-align: center; padding: 24px 20px; }
+  .footer-links { justify-content: center; }
+  .profile-trigger span { display: none; }
+}
+
+@media (max-width: 420px) {
+  .quick-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
 </head>
-
 <body>
 
-    <div id="loading-screen">
-        <i class="fa-solid fa-circle-notch fa-spin"></i>
-        <p>Authenticating STNET ID...</p>
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loader-mark"></div>
+  <p class="loader-label">Authenticating STNET ID</p>
+</div>
+
+<!-- WELCOME / LOGIN -->
+<div id="welcome-screen">
+
+  <!-- LEFT: Brand Panel -->
+  <div class="wl-left">
+    <div class="wl-grid"></div>
+    <div class="wl-corner"></div>
+    <div class="wl-bottom-glow"></div>
+
+    <!-- Logo -->
+    <div class="wl-logo">
+      <div class="wl-logo-mark"><i class="fa-solid fa-tower-broadcast"></i></div>
+      <span class="wl-logo-text">STNET<span>.</span>Radio</span>
     </div>
 
-    <div id="welcome-screen">
-        <!-- Glow orbs -->
-        <div class="orb" style="top:-10%;left:-10%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(255,0,0,0.07) 0%,transparent 70%);"></div>
-        <div class="orb" style="bottom:-10%;right:-10%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(255,0,0,0.07) 0%,transparent 70%);"></div>
-
-        <div class="welcome-card fade-in-up">
-            <div class="welcome-logo"><i class="fa-solid fa-id-badge"></i></div>
-            <h1 class="welcome-title">STNET ID</h1>
-            <p class="welcome-sub">Staff Portal &amp; Workspace</p>
-            <button class="btn-signin" onclick="login()">
-                <i class="fa-solid fa-right-to-bracket"></i> Sign In with STNET ID
-            </button>
-            <p class="welcome-note"><i class="fa-solid fa-lock" style="margin-right:4px;"></i>Authorized personnel only</p>
-        </div>
+    <!-- Main Stage -->
+    <div class="wl-stage">
+      <p class="wl-label">Staff Portal</p>
+      <h1 class="wl-big-title">STNET<em>ID</em></h1>
+      <p class="wl-desc">Your unified workspace for email, calendar, file storage, and internal communications.</p>
+      <div class="wl-pills">
+        <span class="wl-pill"><i class="fa-solid fa-envelope"></i> Email</span>
+        <span class="wl-pill"><i class="fa-solid fa-calendar-days"></i> Calendar</span>
+        <span class="wl-pill"><i class="fa-brands fa-google-drive"></i> Drive</span>
+        <span class="wl-pill"><i class="fa-solid fa-message"></i> Messages</span>
+        <span class="wl-pill"><i class="fa-solid fa-paper-plane"></i> Dispatch</span>
+      </div>
     </div>
 
-    <div id="protected-content" style="display: none;">
-        <header>
-            <a href="/" class="brand">SNR Staff Portal</a>
-            <button id="hamburger-btn" aria-label="Toggle navigation">
-                <span></span>
-                <span></span>
-            </button>
-            <nav>
-                <ul>
-                    <li><a href="/" style="color: var(--red); font-weight: 700;">Home</a></li>
-                    <li><a href="https://email.stnetradio.com">Email</a></li>
-                    <li><a href="/email">Dispatch</a></li>
-                    <li><a href="https://calendar.stnetradio.com">Calendar</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <!-- Profile Dropdown - standalone, outside nav -->
-        <div class="top-bar" id="top-bar-profile" style="display:none;">
-            <div class="user-profile-dropdown" id="user-profile-dropdown">
-                <button class="profile-btn" onclick="toggleProfileMenu(event)">
-                    <img id="nav-user-picture" src="https://cdn.auth0.com/avatars/st.png" alt="Profile">
-                    <span id="nav-user-name-text">STNET ID</span>
-                    <i class="fa-solid fa-chevron-down" style="font-size:0.75rem;"></i>
-                </button>
-                <div class="profile-menu" id="profile-menu">
-                    <div class="profile-header">
-                        <span class="profile-name-label" id="menu-user-name">Team</span>
-                        <span class="profile-email-label" id="menu-user-email">...</span>
-                    </div>
-                    <a href="/profile.html" class="profile-menu-item"><i class="fa-regular fa-id-badge"></i> My Profile</a>
-                    <button onclick="logout()" class="profile-menu-item logout-red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="hero">
-            <div class="hero-glow" aria-hidden="true"></div>
-            <div class="hero-glow-2" aria-hidden="true"></div>
-
-            <div class="hero-content">
-                <h1 class="fade-in-up">STNET ID</h1>
-                <p class="hero-sub fade-in-up delay-1">Staff Portal & Workspace</p>
-                <p class="fade-in-up delay-2" style="margin-top: 15px; font-weight: 500; font-size: 1.1rem;">
-                    Welcome back, <span id="welcome-name" style="color: var(--red);">Team</span>
-                </p>
-            </div>
-        </div>
-
-        <div class="dashboard-container">
-
-            <section class="dashboard-section" data-animate>
-                <div class="section-header">
-                    <h2>Quick Access</h2>
-                    <p>Essential daily tools</p>
-                </div>
-                <div class="quick-grid">
-                    <a href="https://calendar.stnetradio.com" class="tool-card" target="_blank" data-animate
-                        data-delay="1">
-                        <i class="tool-icon fa-solid fa-calendar-days"></i>
-                        <span class="tool-name">Calendar</span>
-                        <span class="tool-desc">Schedule & Events</span>
-                    </a>
-                    <a href="https://email.stnetradio.com" class="tool-card" target="_blank" data-animate data-delay="2">
-                        <i class="tool-icon fa-solid fa-envelope"></i>
-                        <span class="tool-name">Email</span>
-                        <span class="tool-desc">Inbox & Drafts</span>
-                    </a>
-                    <a href="/email" class="tool-card" data-animate data-delay="3">
-                        <i class="tool-icon fa-solid fa-paper-plane"></i>
-                        <span class="tool-name">Dispatch</span>
-                        <span class="tool-desc">Send Emails</span>
-                    </a>
-                    <a href="https://drive.stnetradio.com" class="tool-card" target="_blank" data-animate data-delay="4">
-                        <i class="tool-icon fa-brands fa-google-drive"></i>
-                        <span class="tool-name">Drive</span>
-                        <span class="tool-desc">Files & Storage</span>
-                    </a>
-                    <a href="https://messages.stnetradio.com" class="tool-card" target="_blank" data-animate
-                        data-delay="5">
-                        <i class="tool-icon fa-solid fa-message"></i>
-                        <span class="tool-name">Messages</span>
-                        <span class="tool-desc">Chat & Team</span>
-                    </a>
-                </div>
-            </section>
-
-            <section class="dashboard-section">
-                <div class="info-grid">
-
-                    <div class="dash-card" data-animate data-delay="1">
-                        <h3><i class="fa-solid fa-server"></i> System Status</h3>
-                        <div class="link-list">
-                            <div class="status-row">
-                                <div class="status-name">
-                                    <i class="fa-brands fa-google" style="width: 20px;"></i> Email
-                                </div>
-                                <span class="status-indicator st-operational">Operational</span>
-                            </div>
-                            <div class="status-row">
-                                <div class="status-name">
-                                    <i class="fa-solid fa-paper-plane" style="width: 20px;"></i> Dispatch
-                                </div>
-                                <span class="status-indicator st-operational">Operational</span>
-                            </div>
-                            <div class="status-row">
-                                <div class="status-name">
-                                    <i class="fa-brands fa-google-drive" style="width: 20px;"></i> Drive
-                                </div>
-                                <span class="status-indicator st-operational">Operational</span>
-                            </div>
-                            <div class="status-row">
-                                <div class="status-name">
-                                    <i class="fa-solid fa-id-card" style="width: 20px;"></i> STNET ID
-                                </div>
-                                <span class="status-indicator st-operational">Operational</span>
-                            </div>
-                            <div class="status-row">
-                                <div class="status-name">
-                                    <i class="fa-solid fa-rss" style="width: 20px;"></i> RSS
-                                </div>
-                                <span class="status-indicator st-operational">Operational</span>
-                            </div>
-                        </div>
-                        <div class="status-updated" id="status-time">
-                            Last updated: Just now
-                        </div>
-                    </div>
-
-                    <div class="dash-card" data-animate data-delay="2">
-                        <h3><i class="fa-solid fa-book-open"></i> Resources</h3>
-                        <div class="link-list">
-                            <a href="https://docs.stnetradio.com/stnetid/home#login-instructions-for-employees"
-                                class="link-item" target="_blank">
-                                <div class="link-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                                <div class="link-content">
-                                    <strong>Security Guidelines</strong>
-                                    <span>Login instructions & 2FA setups</span>
-                                </div>
-                            </a>
-                            <a href="mailto:team@stnetradio.com" class="link-item" target="_blank">
-                                <div class="link-icon"><i class="fa-solid fa-headset"></i></div>
-                                <div class="link-content">
-                                    <strong>IT Support</strong>
-                                    <span>Contact helpdesk for assistance</span>
-                                </div>
-                            </a>
-                            <a href="https://docs.stnetradio.com" class="link-item" target="_blank">
-                                <div class="link-icon"><i class="fa-solid fa-folder-open"></i></div>
-                                <div class="link-content">
-                                    <strong>Knowledge Base</strong>
-                                    <span>Browse all documentation</span>
-                                </div>
-                            </a>
-                            <a href="/english-test" class="link-item">
-                                <div class="link-icon"><i class="fa-solid fa-language"></i></div>
-                                <div class="link-content">
-                                    <strong>English Test</strong>
-                                    <span>Powered by EF SET</span>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <section class="dashboard-section" data-animate>
-                <div class="section-header">
-                    <h2>Announcements</h2>
-                    <p>Latest updates from the team</p>
-                </div>
-
-                <div class="news-grid">
-
-                    <div class="news-card" data-animate data-delay="1">
-                        <span class="news-badge">New</span>
-                        <h4>Email Dispatch</h4>
-                        <p>Our official Email Dispatch system is now live. Access templates and send official
-                            communications
-                            directly from our portal.</p>
-                        <div class="news-meta">
-                            <a href="/email" class="link">Open App</a> • Feb 22
-                        </div>
-                    </div>
-
-                    <div class="news-card" data-animate data-delay="2">
-                        <span class="news-badge">Tips</span>
-                        <h4>Chrome Integration</h4>
-                        <p>Use STNET ID on Google Chrome for seamless login across all our apps including VPN and
-                            RSS.
-                        </p>
-                        <div class="news-meta">
-                            <a href="https://support.google.com/chrome" class="link" target="_blank">Read Guide</a>
-                            •
-                            Nov 28
-                        </div>
-                    </div>
-
-                    <div class="news-card" data-animate data-delay="3">
-                        <span class="news-badge">Important</span>
-                        <h4>Cloudflare Outage</h4>
-                        <p>Services including ID and VPN are temporarily unavailable due to upstream provider
-                            issues.
-                        </p>
-                        <div class="news-meta">
-                            <a href="https://x.com/TeamSTNETRadio" class="link" target="_blank">Check Status</a> •
-                            Nov
-                            18
-                        </div>
-                    </div>
-
-                    <div class="news-card" data-animate data-delay="4">
-                        <span class="news-badge">Update</span>
-                        <h4>Google Workspace</h4>
-                        <p>STNET Email has moved to Gmail. Please check the new login instructions for access.</p>
-                        <div class="news-meta">
-                            <a href="https://docs.stnetradio.com" class="link" target="_blank">Learn More</a> • Nov
-                            1
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-        </div>
-
-        <footer>
-            <div class="social-links">
-                <a href="https://facebook.com/stnetradio" aria-label="Facebook">FB</a>
-                <a href="https://x.com/stnetradio" aria-label="Twitter">X</a>
-                <a href="https://instagram.com/stnetradio" aria-label="Instagram">IG</a>
-            </div>
-            <p class="copyright">&copy; 2026 STNET Radio. All rights reserved.</p>
-            <p>
-                <a href="/Privacy-Policy.html" class="st-link">Privacy Policy</a> |
-                <a href="/Terms-of-Service.html" class="st-link">Terms of Service</a>
-            </p>
-        </footer>
+    <!-- Bottom status -->
+    <div class="wl-status">
+      <span class="wl-status-dot"></span>
+      All systems operational &nbsp;·&nbsp; <span id="login-time">—</span>
     </div>
-    <script src="/JavaScript/viewport-fix.js"></script>
-    <script src="/JavaScript/mobile-menu.js"></script>
-    <script src="/JavaScript/scroll-animate.js"></script>
-    <script src="/JavaScript/pwa.js"></script>
+  </div>
 
-    <script>
-        const AUTH0_DOMAIN = "auth.stnetradio.com";
-        const AUTH0_CLIENT_ID = "U4t6BLF2INrgwJbNTRXMpYitLD1SjTCW";
-        let auth0Client = null;
+  <!-- RIGHT: Auth Panel -->
+  <div class="wl-right">
+    <div class="wl-form-wrap">
+      <p class="wl-form-tag">Authentication Required</p>
+      <h2 class="wl-form-title">Sign in to<br>your workspace</h2>
+      <p class="wl-form-sub">Use your STNET ID credentials to access the staff portal and all connected services.</p>
 
-        window.onload = async () => {
-            auth0Client = await auth0.createAuth0Client({
-                domain: AUTH0_DOMAIN,
-                clientId: AUTH0_CLIENT_ID,
-                authorizationParams: {
-                    redirect_uri: window.location.origin // ให้กลับมาหน้าแรกเสมอหลัง Login
-                },
-                cacheLocation: 'localstorage'
-            });
+      <button class="btn-login" onclick="login()">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        Continue with STNET ID
+      </button>
 
-            // ตรวจสอบ Callback กรณีเพิ่งเด้งกลับมาจากการ Login
-            if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
-                await auth0Client.handleRedirectCallback();
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
+      <div class="wl-divider"></div>
 
-            const isAuthenticated = await auth0Client.isAuthenticated();
+      <button class="btn-sso" onclick="login()">
+        <i class="fa-brands fa-google" style="color:#ea4335;"></i>
+        Sign in with Google Workspace
+      </button>
 
-            if (isAuthenticated) {
-                // ถ้า Login ผ่านแล้ว ให้ซ่อนหน้า Loading แล้วโชว์เนื้อหาหลัก
-                document.getElementById("loading-screen").style.display = "none";
-                document.getElementById("protected-content").style.display = "block";
+      <p class="wl-note">
+        <i class="fa-solid fa-shield-halved"></i>
+        Access is restricted to authorized STNET Radio personnel only. All sessions are monitored and logged.
+      </p>
+    </div>
+  </div>
 
-                // ดึงชื่อมาแสดงผล
-                const user = await auth0Client.getUser();
-                document.getElementById("welcome-name").innerText = user.name || user.email;
-                document.getElementById("nav-user-name-text").innerText = user.name || "STNET ID";
-                document.getElementById("menu-user-name").innerText = user.name || "STNET ID";
-                document.getElementById("menu-user-email").innerText = user.email || "";
-                if (user.picture) document.getElementById("nav-user-picture").src = user.picture;
-                document.getElementById("top-bar-profile").style.display = "block";
-            } else {
-                // ยังไม่ Login → แสดงหน้า Welcome
-                document.getElementById("loading-screen").style.display = "none";
-                document.getElementById("welcome-screen").style.display = "flex";
-            }
-        };
+</div>
 
-        // ฟังก์ชันสำหรับปุ่ม Logout
-        function logout() {
-            auth0Client.logout({ logoutParams: { returnTo: window.location.origin } });
-        }
+<!-- PROTECTED APP -->
+<div id="protected-content">
 
-        function login() {
-            auth0Client.loginWithRedirect();
-        }
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <a href="/" class="topbar-brand">STNET<span class="brand-dot">.</span>ID</a>
+    <div class="topbar-divider"></div>
+    <nav>
+      <ul class="topbar-nav">
+        <li><a href="/" class="active">Home</a></li>
+        <li><a href="https://email.stnetradio.com" target="_blank">Email</a></li>
+        <li><a href="/email">Dispatch</a></li>
+        <li><a href="https://calendar.stnetradio.com" target="_blank">Calendar</a></li>
+      </ul>
+    </nav>
 
-        function toggleProfileMenu(e) {
-            e.stopPropagation();
-            document.getElementById("profile-menu").classList.toggle("active");
-        }
+    <div class="topbar-right">
+      <!-- Profile -->
+      <div class="profile-wrap" id="profile-wrap" style="display:none;">
+        <button class="profile-trigger" onclick="toggleDropdown(event)">
+          <img id="nav-pic" src="https://cdn.auth0.com/avatars/st.png" alt="Profile">
+          <span id="nav-name">STNET ID</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="profile-dropdown" id="profile-dropdown">
+          <div class="pd-header">
+            <span class="pd-name" id="dd-name">Team Member</span>
+            <span class="pd-email" id="dd-email">—</span>
+          </div>
+          <a href="/profile.html" class="pd-item"><i class="fa-regular fa-id-badge"></i> My Profile</a>
+          <button onclick="logout()" class="pd-item red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button>
+        </div>
+      </div>
 
-        document.addEventListener('click', function (e) {
-            const dropdown = document.getElementById("user-profile-dropdown");
-            const menu = document.getElementById("profile-menu");
-            if (dropdown && !dropdown.contains(e.target)) {
-                menu.classList.remove("active");
-            }
-        });
-    </script>
+      <!-- Hamburger -->
+      <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE NAV -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="/">Home</a>
+    <a href="https://email.stnetradio.com" target="_blank">Email</a>
+    <a href="/email">Dispatch</a>
+    <a href="https://calendar.stnetradio.com" target="_blank">Calendar</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-canvas"></div>
+    <div class="hero-lines"></div>
+    <div class="hero-inner">
+      <p class="hero-tag">Staff Portal</p>
+      <h1 class="hero-title">Welcome back,<br><em id="hero-name">Team</em></h1>
+      <p class="hero-welcome">
+        <i class="fa-regular fa-clock" style="color:var(--text-3);font-size:0.8rem;"></i>
+        <span id="hero-time">—</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- QUICK ACCESS -->
+    <section class="fade-up">
+      <div class="sec-header">
+        <h2 class="sec-title">Quick Access</h2>
+        <span class="sec-count">05 TOOLS</span>
+      </div>
+      <div class="quick-grid">
+        <a href="https://calendar.stnetradio.com" class="tool-card" target="_blank">
+          <i class="tool-icon fa-solid fa-calendar-days"></i>
+          <span class="tool-name">Calendar</span>
+          <span class="tool-desc">Schedule & Events</span>
+        </a>
+        <a href="https://email.stnetradio.com" class="tool-card" target="_blank">
+          <i class="tool-icon fa-solid fa-envelope"></i>
+          <span class="tool-name">Email</span>
+          <span class="tool-desc">Inbox & Drafts</span>
+        </a>
+        <a href="/email" class="tool-card">
+          <i class="tool-icon fa-solid fa-paper-plane"></i>
+          <span class="tool-name">Dispatch</span>
+          <span class="tool-desc">Send Emails</span>
+        </a>
+        <a href="https://drive.stnetradio.com" class="tool-card" target="_blank">
+          <i class="tool-icon fa-brands fa-google-drive"></i>
+          <span class="tool-name">Drive</span>
+          <span class="tool-desc">Files & Storage</span>
+        </a>
+        <a href="https://messages.stnetradio.com" class="tool-card" target="_blank">
+          <i class="tool-icon fa-solid fa-message"></i>
+          <span class="tool-name">Messages</span>
+          <span class="tool-desc">Chat & Team</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- STATUS + RESOURCES -->
+    <section class="info-grid fade-up">
+      <!-- System Status -->
+      <div class="card">
+        <div class="card-head">
+          <i class="fa-solid fa-circle-dot"></i>
+          <h3>System Status</h3>
+        </div>
+        <div class="status-list">
+          <div class="status-row">
+            <span class="status-label"><i class="fa-brands fa-google"></i> Email</span>
+            <span class="status-badge st-ok">Operational</span>
+          </div>
+          <div class="status-row">
+            <span class="status-label"><i class="fa-solid fa-paper-plane"></i> Dispatch</span>
+            <span class="status-badge st-ok">Operational</span>
+          </div>
+          <div class="status-row">
+            <span class="status-label"><i class="fa-brands fa-google-drive"></i> Drive</span>
+            <span class="status-badge st-ok">Operational</span>
+          </div>
+          <div class="status-row">
+            <span class="status-label"><i class="fa-solid fa-id-card"></i> STNET ID</span>
+            <span class="status-badge st-ok">Operational</span>
+          </div>
+          <div class="status-row">
+            <span class="status-label"><i class="fa-solid fa-rss"></i> RSS</span>
+            <span class="status-badge st-ok">Operational</span>
+          </div>
+        </div>
+        <div class="status-foot" id="status-time">Updated just now</div>
+      </div>
+
+      <!-- Resources -->
+      <div class="card">
+        <div class="card-head">
+          <i class="fa-solid fa-book-open"></i>
+          <h3>Resources</h3>
+        </div>
+        <div class="resource-list">
+          <a href="https://docs.stnetradio.com/stnetid/home#login-instructions-for-employees" class="resource-item" target="_blank">
+            <div class="ri-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="ri-text">
+              <strong>Security Guidelines</strong>
+              <span>Login instructions & 2FA setup</span>
+            </div>
+            <i class="fa-solid fa-arrow-right ri-arrow"></i>
+          </a>
+          <a href="mailto:team@stnetradio.com" class="resource-item">
+            <div class="ri-icon"><i class="fa-solid fa-headset"></i></div>
+            <div class="ri-text">
+              <strong>IT Support</strong>
+              <span>Contact helpdesk for assistance</span>
+            </div>
+            <i class="fa-solid fa-arrow-right ri-arrow"></i>
+          </a>
+          <a href="https://docs.stnetradio.com" class="resource-item" target="_blank">
+            <div class="ri-icon"><i class="fa-solid fa-folder-open"></i></div>
+            <div class="ri-text">
+              <strong>Knowledge Base</strong>
+              <span>Browse all documentation</span>
+            </div>
+            <i class="fa-solid fa-arrow-right ri-arrow"></i>
+          </a>
+          <a href="/english-test" class="resource-item">
+            <div class="ri-icon"><i class="fa-solid fa-language"></i></div>
+            <div class="ri-text">
+              <strong>English Test</strong>
+              <span>Powered by EF SET</span>
+            </div>
+            <i class="fa-solid fa-arrow-right ri-arrow"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANNOUNCEMENTS -->
+    <section class="fade-up">
+      <div class="sec-header">
+        <h2 class="sec-title">Announcements</h2>
+        <span class="sec-count">04 ITEMS</span>
+      </div>
+      <div class="announce-grid">
+        <div class="announce-card">
+          <span class="ac-badge">New</span>
+          <h4 class="ac-title">Email Dispatch</h4>
+          <p class="ac-body">Our official Email Dispatch system is now live. Access templates and send official communications directly from the portal.</p>
+          <div class="ac-foot">
+            <span class="ac-date">Feb 22</span>
+            <a href="/email" class="ac-link">Open App <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="announce-card">
+          <span class="ac-badge">Tips</span>
+          <h4 class="ac-title">Chrome Integration</h4>
+          <p class="ac-body">Use STNET ID on Google Chrome for seamless login across all apps including VPN and RSS feeds.</p>
+          <div class="ac-foot">
+            <span class="ac-date">Nov 28</span>
+            <a href="https://support.google.com/chrome" class="ac-link" target="_blank">Read Guide <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="announce-card">
+          <span class="ac-badge">Important</span>
+          <h4 class="ac-title">Cloudflare Outage</h4>
+          <p class="ac-body">Services including ID and VPN were temporarily unavailable due to upstream provider issues. Now resolved.</p>
+          <div class="ac-foot">
+            <span class="ac-date">Nov 18</span>
+            <a href="https://x.com/TeamSTNETRadio" class="ac-link" target="_blank">Check Status <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="announce-card">
+          <span class="ac-badge">Update</span>
+          <h4 class="ac-title">Google Workspace</h4>
+          <p class="ac-body">STNET Email has migrated to Gmail. Please review the updated login instructions for access.</p>
+          <div class="ac-foot">
+            <span class="ac-date">Nov 1</span>
+            <a href="https://docs.stnetradio.com" class="ac-link" target="_blank">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-brand">STNET<span>.</span>ID</div>
+    <p class="footer-copy">&copy; 2026 STNET Radio. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/Privacy-Policy.html">Privacy</a>
+      <a href="/Terms-of-Service.html">Terms</a>
+      <a href="https://facebook.com/stnetradio" target="_blank">Facebook</a>
+      <a href="https://x.com/stnetradio" target="_blank">X</a>
+    </div>
+  </footer>
+
+</div>
+
+<script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+<script>
+const AUTH0_DOMAIN = "auth.stnetradio.com";
+const AUTH0_CLIENT_ID = "U4t6BLF2INrgwJbNTRXMpYitLD1SjTCW";
+let auth0Client = null;
+
+window.onload = async () => {
+  auth0Client = await auth0.createAuth0Client({
+    domain: AUTH0_DOMAIN,
+    clientId: AUTH0_CLIENT_ID,
+    authorizationParams: { redirect_uri: window.location.origin },
+    cacheLocation: 'localstorage'
+  });
+
+  if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
+    await auth0Client.handleRedirectCallback();
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  // Login page clock
+  function updateLoginClock() {
+    const el = document.getElementById("login-time");
+    if (el) el.textContent = new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit', timeZoneName:'short'});
+  }
+  updateLoginClock();
+  setInterval(updateLoginClock, 30000);
+
+  const isAuthenticated = await auth0Client.isAuthenticated();
+
+  if (isAuthenticated) {
+    document.getElementById("loading-screen").style.display = "none";
+    document.getElementById("protected-content").style.display = "block";
+
+    const user = await auth0Client.getUser();
+    const name = user.name || user.email;
+
+    document.getElementById("hero-name").textContent = name.split(' ')[0] || name;
+    document.getElementById("nav-name").textContent = name;
+    document.getElementById("dd-name").textContent = name;
+    document.getElementById("dd-email").textContent = user.email || "";
+    if (user.picture) document.getElementById("nav-pic").src = user.picture;
+    document.getElementById("profile-wrap").style.display = "flex";
+
+    // Live clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("hero-time").textContent =
+        now.toLocaleString('en-GB', { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' });
+      document.getElementById("status-time").textContent =
+        "Updated " + now.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  } else {
+    document.getElementById("loading-screen").style.display = "none";
+    document.getElementById("welcome-screen").style.display = "flex";
+  }
+};
+
+function logout() {
+  auth0Client.logout({ logoutParams: { returnTo: window.location.origin } });
+}
+
+function login() {
+  auth0Client.loginWithRedirect();
+}
+
+function toggleDropdown(e) {
+  e.stopPropagation();
+  document.getElementById("profile-dropdown").classList.toggle("open");
+}
+
+document.addEventListener('click', () => {
+  document.getElementById("profile-dropdown")?.classList.remove("open");
+});
+
+function toggleMobileNav() {
+  document.getElementById("mobile-nav").classList.toggle("open");
+}
+</script>
 </body>
-
 </html>
