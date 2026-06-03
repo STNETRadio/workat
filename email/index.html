@@ -1,804 +1,525 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STNET Radio - Email Dispatch System</title>
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-    <link
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
-    <style>
-        @font-face {
-            font-family: 'Chillax-Variable';
-            src: url('/fonts/Chillax-Variable.woff2') format('woff2'),
-                url('/fonts/Chillax-Variable.woff') format('woff'),
-                url('/fonts/Chillax-Variable.ttf') format('truetype');
-        }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Email Dispatch | STNET ID Staff Portal</title>
+<meta name="theme-color" content="#0a0a0c">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+<style>
+@font-face {
+  font-family: 'Chillax-Variable';
+  src: url('/fonts/Chillax-Variable.woff2') format('woff2'),
+       url('/fonts/Chillax-Variable.woff') format('woff'),
+       url('/fonts/Chillax-Variable.ttf') format('truetype');
+  font-weight: 100 900; font-display: swap;
+}
+:root {
+  --red:#e8000f; --red-dim:#8a000a;
+  --bg:#0a0a0c; --surface:#111116; --surface-2:#18181f; --surface-3:#1e1e28;
+  --border:rgba(255,255,255,0.07); --border-hover:rgba(232,0,15,0.35);
+  --text:#f0f0f5; --text-2:#9090a0; --text-3:#55556a;
+  --success:#22c55e; --danger:#f87171;
+  --mono:'IBM Plex Mono',monospace; --sans:'Inter','IBM Plex Sans Thai',sans-serif;
+  --display:'Syne',sans-serif; --chillax:'Chillax-Variable',sans-serif;
+  --radius:12px; --radius-lg:20px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);min-height:100dvh;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:0.022;pointer-events:none;z-index:0;}
 
-        :root {
-            --bg: #ffffff;
-            --container-bg: rgba(255, 255, 255, 0.7);
-            --border-color: rgba(0, 0, 0, 0.1);
-            --input-bg: rgba(255, 255, 255, 0.9);
-            --text-main: #111;
-            --text-muted: #666;
-            --primary: #f70000;
-            --primary-hover: #cc0000;
-            --success: #10b981;
-            --danger: #d93025;
-        }
+/* LOADING */
+#loading-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);z-index:9999;gap:16px;}
+.loader-mark{width:44px;height:44px;border:2px solid var(--surface-3);border-top-color:var(--red);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loader-label{font-family:var(--mono);font-size:0.72rem;color:var(--text-3);letter-spacing:0.12em;text-transform:uppercase;}
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #000000;
-                --container-bg: rgba(20, 20, 20, 0.7);
-                --border-color: rgba(255, 255, 255, 0.15);
-                --input-bg: rgba(255, 255, 255, 0.05);
-                --text-main: #eee;
-                --text-muted: #aaa;
-                --primary: #ff3333;
-                --primary-hover: #ff6666;
-            }
-        }
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(10,10,12,0.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;z-index:1000;}
+.topbar-brand{font-family:var(--chillax);font-size:1.15rem;font-weight:700;color:#fff;text-decoration:none;letter-spacing:-0.01em;flex-shrink:0;}
+.topbar-divider{width:1px;height:22px;background:var(--border);margin:0 20px;}
+.topbar-crumb{font-family:var(--mono);font-size:0.72rem;color:var(--text-3);letter-spacing:0.06em;display:flex;align-items:center;gap:8px;}
+.topbar-crumb i{font-size:0.6rem;}
+.topbar-crumb span{color:var(--text-2);}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.btn-back-top{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:0.72rem;color:var(--text-3);text-decoration:none;letter-spacing:0.06em;padding:6px 12px;border-radius:8px;transition:color 0.2s,background 0.2s;}
+.btn-back-top:hover{color:var(--text);background:rgba(255,255,255,0.04);}
 
-        html,
-        body {
-            background-color: var(--bg) !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            min-height: 100dvh !important;
-            color: var(--text-main);
-            font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-        }
+/* Profile */
+.profile-wrap{position:relative;}
+.profile-trigger{display:flex;align-items:center;gap:9px;background:var(--surface-2);border:1px solid var(--border);border-radius:30px;padding:5px 14px 5px 5px;cursor:pointer;transition:border-color 0.2s,background 0.2s;font-family:var(--sans);}
+.profile-trigger:hover{border-color:var(--border-hover);background:var(--surface-3);}
+.profile-trigger img{width:28px;height:28px;border-radius:50%;object-fit:cover;}
+.profile-trigger span{font-size:0.82rem;font-weight:500;color:var(--text);max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.profile-trigger i{font-size:0.68rem;color:var(--text-3);}
+.profile-dropdown{position:absolute;top:calc(100% + 12px);right:0;width:230px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:0 20px 50px rgba(0,0,0,0.6);opacity:0;visibility:hidden;transform:translateY(-8px);transition:all 0.22s cubic-bezier(0.4,0,0.2,1);overflow:hidden;z-index:2000;}
+.profile-dropdown.open{opacity:1;visibility:visible;transform:translateY(0);}
+.pd-header{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);}
+.pd-name{font-weight:600;font-size:0.88rem;color:var(--text);display:block;margin-bottom:3px;}
+.pd-email{font-size:0.75rem;color:var(--text-3);font-family:var(--mono);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pd-item{display:flex;align-items:center;gap:10px;padding:11px 16px;color:var(--text-2);text-decoration:none;font-size:0.85rem;font-weight:500;transition:background 0.15s,color 0.15s;background:none;border:none;cursor:pointer;width:100%;font-family:var(--sans);text-align:left;}
+.pd-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.pd-item i{width:14px;text-align:center;font-size:0.78rem;}
+.pd-item.red{color:var(--red);border-top:1px solid var(--border);}
+.pd-item.red:hover{background:rgba(232,0,15,0.07);}
 
-        .hero-glow,
-        .hero-glow-2 {
-            position: fixed;
-            width: 50vw;
-            height: 50vw;
-            border-radius: 50%;
-            z-index: -1;
-            pointer-events: none;
-        }
+/* Hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;margin-left:8px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--text-2);border-radius:2px;}
+.mobile-nav{display:none;position:fixed;inset:0;top:60px;background:rgba(10,10,12,0.97);backdrop-filter:blur(20px);z-index:999;flex-direction:column;padding:20px 28px;gap:4px;}
+.mobile-nav.open{display:flex;}
+.mobile-nav a{padding:14px 0;color:var(--text-2);font-size:1rem;font-weight:500;text-decoration:none;border-bottom:1px solid var(--border);transition:color 0.2s;}
+.mobile-nav a:hover{color:var(--text);}
 
-        .hero-glow {
-            top: -10%;
-            left: -10%;
-            background: radial-gradient(circle, rgba(247, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
-        }
+/* APP */
+#app-view{display:none;position:relative;z-index:1;}
 
-        .hero-glow-2 {
-            bottom: -10%;
-            right: -10%;
-            background: radial-gradient(circle, rgba(247, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
-        }
+/* HERO */
+.hero{padding-top:60px;position:relative;overflow:hidden;min-height:260px;display:flex;align-items:flex-end;}
+.hero-canvas{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 70% 20%,rgba(232,0,15,0.06) 0%,transparent 60%),linear-gradient(180deg,var(--bg) 0%,var(--surface) 100%);}
+.hero-lines{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,0.02) 60px);mask-image:linear-gradient(180deg,transparent,rgba(0,0,0,0.6),transparent);}
+.hero-inner{position:relative;z-index:2;padding:36px 40px 44px;width:100%;}
+.hero-tag{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.2em;color:var(--red);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.hero-tag::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--red-dim),transparent);max-width:120px;}
+.hero-title{font-family:var(--display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;color:var(--text);letter-spacing:-0.04em;line-height:1;margin-bottom:10px;}
+.hero-title em{color:var(--red);font-style:normal;}
+.hero-sub{font-size:0.82rem;color:var(--text-3);font-family:var(--mono);letter-spacing:0.06em;display:flex;align-items:center;gap:8px;}
 
-        @media (prefers-color-scheme: dark) {
+/* SENDER BADGE */
+.sender-badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:30px;padding:5px 14px 5px 6px;font-size:0.78rem;color:var(--text-2);font-family:var(--mono);}
+.sender-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 6px rgba(34,197,94,0.5);}
 
-            .hero-glow,
-            .hero-glow-2 {
-                background: radial-gradient(circle, rgba(255, 51, 51, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
-            }
-        }
+/* MAIN */
+.main{max-width:760px;margin:0 auto;padding:36px 28px 80px;display:flex;flex-direction:column;gap:16px;}
 
-        .fade-in-up {
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+/* SECTION LABEL */
+.section-label{font-family:var(--mono);font-size:0.62rem;color:var(--text-3);letter-spacing:0.16em;text-transform:uppercase;padding:0 4px;margin-top:16px;margin-bottom:4px;}
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
+/* CARD */
+.pcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.pcard-head{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface-2);display:flex;align-items:center;gap:10px;}
+.pcard-head i{color:var(--red);font-size:0.82rem;}
+.pcard-head h3{font-family:var(--mono);font-size:0.8rem;font-weight:600;color:var(--text);letter-spacing:0.02em;}
+.pcard-body{padding:20px 24px;}
+.pcard-divider{height:1px;background:var(--border);}
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+/* FORM FIELDS */
+.field{margin-bottom:16px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-family:var(--mono);font-size:0.65rem;font-weight:600;color:var(--text-3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;}
+.field label .hint{font-weight:400;color:var(--text-3);opacity:0.7;text-transform:none;letter-spacing:0;margin-left:6px;font-family:var(--sans);font-size:0.72rem;}
+.field input,.field textarea{width:100%;padding:11px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--sans);font-size:0.87rem;transition:border-color 0.2s,background 0.2s;outline:none;resize:none;}
+.field input:focus,.field textarea:focus{border-color:rgba(232,0,15,0.4);background:var(--surface-3);}
+.field input::placeholder,.field textarea::placeholder{color:var(--text-3);}
+.field textarea{min-height:90px;line-height:1.6;}
 
-        .top-bar {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-        }
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 
-        .top-bar-left {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-        }
+/* TEMPLATE SELECT */
+.tpl-select{position:relative;}
+.tpl-trigger{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:border-color 0.2s,background 0.2s;user-select:none;}
+.tpl-trigger:hover,.tpl-trigger.open{border-color:rgba(232,0,15,0.3);background:var(--surface-3);}
+.tpl-trigger-label{font-size:0.87rem;color:var(--text-3);}
+.tpl-trigger-label.selected{color:var(--text);}
+.tpl-trigger i{font-size:0.7rem;color:var(--text-3);transition:transform 0.2s;}
+.tpl-trigger.open i{transform:rotate(180deg);}
+.tpl-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 16px 40px rgba(0,0,0,0.5);z-index:200;overflow:hidden;display:none;}
+.tpl-dropdown.open{display:block;}
+.tpl-option{padding:12px 16px;font-size:0.85rem;color:var(--text-2);cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;gap:10px;transition:background 0.15s,color 0.15s;}
+.tpl-option:last-child{border-bottom:none;}
+.tpl-option:hover{background:rgba(232,0,15,0.05);color:var(--text);}
+.tpl-option i{color:var(--red);font-size:0.75rem;width:14px;text-align:center;}
 
-        .btn-back {
-            background: var(--container-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 10px 18px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
+/* GENERAL FIELDS PANEL */
+#generalEmailFields{display:none;}
+.lang-header{font-family:var(--mono);font-size:0.65rem;color:var(--red);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px;margin-top:4px;display:flex;align-items:center;gap:8px;}
+.lang-header::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(232,0,15,0.3),transparent);}
 
-        .btn-back:hover {
-            background: rgba(247, 0, 0, 0.05);
-            border-color: rgba(247, 0, 0, 0.2);
-            color: var(--primary);
-            transform: translateX(-2px);
-        }
+/* SUBMIT BUTTON */
+.btn-submit{width:100%;padding:13px 24px;background:var(--red);color:#fff;border:none;border-radius:var(--radius);font-family:var(--sans);font-size:0.92rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:background 0.2s,transform 0.15s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(232,0,15,0.25);position:relative;overflow:hidden;margin-top:20px;}
+.btn-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent);pointer-events:none;}
+.btn-submit:hover{background:#f50010;transform:translateY(-1px);box-shadow:0 6px 26px rgba(232,0,15,0.38);}
+.btn-submit:disabled{background:var(--surface-3);color:var(--text-3);box-shadow:none;cursor:not-allowed;transform:none;}
 
-        .btn-logout {
-            background: var(--container-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 10px 16px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: inherit;
-        }
+/* STATUS MESSAGE */
+.status-msg{margin-top:14px;padding:12px 16px;border-radius:var(--radius);font-family:var(--mono);font-size:0.75rem;letter-spacing:0.04em;text-align:center;display:none;}
+.status-msg.success{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:var(--success);}
+.status-msg.error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--danger);}
+.status-msg.loading{background:var(--surface-2);border:1px solid var(--border);color:var(--text-3);}
 
-        .btn-logout:hover {
-            background: rgba(247, 0, 0, 0.1);
-            color: var(--primary);
-            border-color: rgba(247, 0, 0, 0.2);
-        }
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.footer-brand{font-family:var(--chillax);font-size:0.95rem;font-weight:700;color:var(--text-2);}
+.footer-copy{font-size:0.75rem;color:var(--text-3);font-family:var(--mono);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:0.75rem;color:var(--text-3);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--text-2);}
 
-        .page-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100dvh;
-            padding: 80px 20px 40px;
-        }
+/* FADE UP */
+.fade-up{opacity:0;transform:translateY(14px);transition:opacity 0.5s ease,transform 0.5s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
 
-        .container {
-            background: var(--container-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 650px;
-            padding: 40px;
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-            font-family: 'Chillax-Variable', 'IBM Plex Sans Thai', sans-serif;
-            background: var(--text-main);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            background-color: var(--input-bg);
-            color: var(--text-main);
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .template-section {
-            background-color: rgba(247, 0, 0, 0.03);
-            padding: 24px 20px;
-            border-radius: 16px;
-            border: 1px dashed rgba(247, 0, 0, 0.2);
-            margin-bottom: 30px;
-        }
-
-        /* Custom Select Styles */
-        .custom-select {
-            position: relative;
-            margin-bottom: 24px;
-        }
-
-        .select-selected {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: var(--input-bg);
-            padding: 14px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            cursor: pointer;
-        }
-
-        .select-items {
-            position: absolute;
-            background-color: var(--container-bg);
-            backdrop-filter: blur(20px);
-            top: calc(100% + 8px);
-            left: 0;
-            right: 0;
-            z-index: 99;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .select-hide {
-            display: none;
-        }
-
-        .select-items div {
-            padding: 14px 16px;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .select-items div:hover {
-            background-color: rgba(247, 0, 0, 0.05);
-            color: var(--primary);
-        }
-
-        #generalEmailFields {
-            display: none;
-            background-color: var(--input-bg);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 24px;
-        }
-
-        .status-message {
-            margin-top: 20px;
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-            display: none;
-            font-weight: 500;
-        }
-
-        #app-view,
-        #loading-view {
-            display: none;
-        }
-
-        .active-view {
-            display: block !important;
-        }
-
-        .user-info {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-            color: var(--text-muted);
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 12px;
-        }
-
-        /* Profile Dropdown Styles */
-        .user-profile-dropdown {
-            position: relative;
-        }
-
-        .profile-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
-            color: var(--text-main, #111);
-            padding: 6px 16px 6px 6px;
-            border-radius: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .profile-btn {
-                background: rgba(0, 0, 0, 0.2);
-                border-color: rgba(255, 255, 255, 0.15);
-                color: #eee;
-            }
-        }
-
-        .profile-btn:hover {
-            background: rgba(247, 0, 0, 0.05);
-            border-color: rgba(247, 0, 0, 0.2);
-            transform: translateY(-1px);
-        }
-
-        .profile-btn img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .profile-menu {
-            position: absolute;
-            top: calc(100% + 15px);
-            right: 0;
-            background: var(--bg);
-            border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            width: 220px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 1000;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .profile-menu {
-                border-color: rgba(255, 255, 255, 0.15);
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            }
-        }
-
-        .profile-menu.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .profile-header {
-            padding: 16px;
-            background: rgba(0, 0, 0, 0.02);
-            border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.05));
-            text-align: left;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .profile-header {
-                background: rgba(255, 255, 255, 0.02);
-                border-bottom-color: rgba(255, 255, 255, 0.05);
-            }
-        }
-
-        .profile-name {
-            display: block;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: var(--text-main, #111);
-            margin-bottom: 4px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .profile-name {
-                color: #eee;
-            }
-        }
-
-        .profile-email {
-            display: block;
-            font-size: 0.8rem;
-            color: #666;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .profile-email {
-                color: #aaa;
-            }
-        }
-
-        .profile-menu-item {
-            padding: 14px 16px;
-            color: var(--text-main, #111);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: background 0.2s;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .profile-menu-item {
-                color: #eee;
-            }
-        }
-
-        .profile-menu-item:hover {
-            background: rgba(0, 0, 0, 0.03);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .profile-menu-item:hover {
-                background: rgba(255, 255, 255, 0.05);
-            }
-        }
-
-        .profile-menu-item i {
-            width: 16px;
-            text-align: center;
-            opacity: 0.8;
-        }
-
-        .profile-menu-item.logout-red {
-            color: var(--primary, #f70000);
-            border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.05));
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .profile-menu-item.logout-red {
-                border-top-color: rgba(255, 255, 255, 0.05);
-            }
-        }
-
-        .profile-menu-item.logout-red:hover {
-            background: rgba(247, 0, 0, 0.05);
-        }
-    </style>
+/* RESPONSIVE */
+@media(max-width:700px){
+  .topbar{padding:0 16px;}
+  .topbar-divider,.topbar-crumb{display:none;}
+  .hamburger{display:flex;}
+  .hero-inner{padding:24px 20px 32px;}
+  .main{padding:20px 16px 60px;}
+  .grid-2{grid-template-columns:1fr;}
+  footer{flex-direction:column;text-align:center;padding:24px 20px;}
+  .footer-links{justify-content:center;}
+  .profile-trigger span{display:none;}
+}
+</style>
 </head>
-
 <body>
-    <!-- Back Button - top left -->
-    <div class="top-bar-left" id="back-btn-container" style="display: none;">
-        <a href="/" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i> Back
-        </a>
-    </div>
 
-    <div class="top-bar" id="logout-container" style="display: none;">
-        <div class="user-profile-dropdown" id="user-profile-dropdown">
-            <button class="profile-btn" onclick="toggleProfileMenu(event)">
-                <img id="nav-user-picture" src="https://cdn.auth0.com/avatars/st.png" alt="Profile">
-                <span id="nav-user-name-text">Team</span>
+<div id="loading-screen">
+  <div class="loader-mark"></div>
+  <p class="loader-label">Authenticating STNET ID</p>
+</div>
+
+<div id="app-view">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <a href="/" class="topbar-brand">STNET Radio</a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-crumb">
+      <span>Staff Portal</span>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>Email Dispatch</span>
+    </div>
+    <div class="topbar-right">
+      <a href="/" class="btn-back-top"><i class="fa-solid fa-arrow-left"></i> Back</a>
+      <div class="profile-wrap" id="profile-wrap" style="display:none;">
+        <button class="profile-trigger" onclick="toggleDropdown(event)">
+          <img id="nav-pic" src="https://cdn.auth0.com/avatars/st.png" alt="Profile">
+          <span id="nav-name">STNET ID</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="profile-dropdown" id="profile-dropdown">
+          <div class="pd-header">
+            <span class="pd-name" id="dd-name">Team Member</span>
+            <span class="pd-email" id="dd-email">—</span>
+          </div>
+          <a href="/profile.html" class="pd-item"><i class="fa-regular fa-id-badge"></i> My Profile</a>
+          <button onclick="logout()" class="pd-item red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="/">Home</a>
+    <a href="https://email.stnetradio.com" target="_blank">Email</a>
+    <a href="/email">Dispatch</a>
+    <a href="https://calendar.stnetradio.com" target="_blank">Calendar</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-canvas"></div>
+    <div class="hero-lines"></div>
+    <div class="hero-inner">
+      <p class="hero-tag">Staff Portal &nbsp;/&nbsp; Communications</p>
+      <h1 class="hero-title">Email<br><em>Dispatch</em></h1>
+      <div class="hero-sub" style="margin-top:10px;">
+        <span class="sender-badge">
+          <span class="sender-badge-dot"></span>
+          Sending as: <span id="hero-sender">hr@stnetradio.com</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <p class="section-label">Compose</p>
+
+    <form id="emailForm">
+
+      <!-- TEMPLATE + SUBJECT -->
+      <div class="pcard fade-up">
+        <div class="pcard-head">
+          <i class="fa-solid fa-layer-group"></i>
+          <h3>Template &amp; Subject</h3>
+        </div>
+        <div class="pcard-body">
+          <div class="field">
+            <label>Template</label>
+            <div class="tpl-select" id="tplSelectWrap">
+              <div class="tpl-trigger" id="tplTrigger" onclick="toggleTplDropdown()">
+                <span class="tpl-trigger-label" id="tplLabel">Select a template</span>
                 <i class="fa-solid fa-chevron-down"></i>
-            </button>
-            <div class="profile-menu" id="profile-menu">
-                <div class="profile-header">
-                    <span class="profile-name" id="menu-user-name">Team</span>
-                    <span class="profile-email" id="menu-user-email">...</span>
+              </div>
+              <div class="tpl-dropdown" id="tplDropdown">
+                <div class="tpl-option" data-value="https://stnetradio.com/email/shortlisted.html" data-subject="Initial Screening Passed - STNET Radio" data-type="standard">
+                  <i class="fa-solid fa-circle-check"></i> Shortlisted
                 </div>
-                <a href="/profile.html" class="profile-menu-item"><i class="fa-regular fa-id-badge"></i> My Profile</a>
-                <a href="#" onclick="logout()" class="profile-menu-item logout-red"><i
-                        class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="hero-glow" aria-hidden="true"></div>
-    <div class="hero-glow-2" aria-hidden="true"></div>
-
-    <div class="page-wrapper">
-        <div class="container fade-in-up">
-            <div class="header">
-                <h1>STNET Radio</h1>
-                <p>Email Dispatch System</p>
-            </div>
-
-            <div id="loading-view" class="active-view" style="text-align: center; color: var(--text-muted);">
-                <i class="fa-solid fa-spinner fa-spin"></i> Authenticating...
-            </div>
-
-            <div id="app-view">
-                <div class="user-info">
-                    Current User: <strong id="user-profile-name" style="color: var(--text-main);"></strong><br>
-                    <span id="user-profile-email"></span>
+                <div class="tpl-option" data-value="https://stnetradio.com/email/rejected.html" data-subject="Application Update - STNET Radio" data-type="standard">
+                  <i class="fa-solid fa-circle-xmark"></i> Rejected
                 </div>
-
-                <form id="emailForm">
-                    <div class="template-section">
-                        <label>Select Template</label>
-                        <div class="custom-select" id="customTemplateSelect">
-                            <div class="select-selected placeholder-active">
-                                <span id="selectedTemplateText">-- Please select a template --</span>
-                                <i class="fa-solid fa-chevron-down chevron"></i>
-                            </div>
-                            <div class="select-items select-hide" id="templateOptionsList">
-                                <div data-value="https://stnetradio.com/email/shortlisted.html"
-                                    data-subject="Initial Screening Passed - STNET Radio" data-type="standard">
-                                    Shortlisted</div>
-                                <div data-value="https://stnetradio.com/email/rejected.html"
-                                    data-subject="Application Update - STNET Radio" data-type="standard">Rejected</div>
-                                <div data-value="https://stnetradio.com/email/welcome.html"
-                                    data-subject="Welcome to STNET Radio!" data-type="standard">Welcome</div>
-                                <div data-value="https://stnetradio.com/email/general.html"
-                                    data-subject="Notification from STNET Radio" data-type="general">General Email
-                                    (อีเมลทั่วไป)</div>
-                            </div>
-                        </div>
-                        <input type="hidden" id="templateSelect">
-
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Email Subject <span
-                                    style="font-weight: normal; color: var(--text-muted); font-size: 12px;">(หัวข้ออีเมล)</span></label>
-                            <input type="text" id="emailSubject" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Recipient Name <span
-                                style="font-weight: normal; color: var(--text-muted); font-size: 12px;">(ชื่อผู้รับ)</span></label>
-                        <input type="text" id="applicantName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Recipient Email <span
-                                style="font-weight: normal; color: var(--text-muted); font-size: 12px;">(อีเมลผู้รับ)</span></label>
-                        <input type="email" id="targetEmail" required>
-                    </div>
-
-                    <div id="generalEmailFields">
-                        <div class="section-title">English Content</div>
-                        <div class="form-group"><label>Paragraph 1 (EN)</label><textarea id="p1_en"></textarea></div>
-                        <div class="form-group"><label>Highlight Text Box (EN)</label><textarea id="hl_en"></textarea>
-                        </div>
-                        <div class="form-group"><label>Paragraph 2 (EN)</label><textarea id="p2_en"></textarea></div>
-                        <div class="section-title">Thai Content</div>
-                        <div class="form-group"><label>Paragraph 1 (TH)</label><textarea id="p1_th"></textarea></div>
-                        <div class="form-group"><label>Highlight Text Box (TH)</label><textarea id="hl_th"></textarea>
-                        </div>
-                        <div class="form-group"><label>Paragraph 2 (TH)</label><textarea id="p2_th"></textarea></div>
-                        <div class="section-title">Sender Signature</div>
-                        <div class="grid-2">
-                            <div class="form-group"><label>Department (EN)</label><input type="text" id="department_en">
-                            </div>
-                            <div class="form-group"><label>Department (TH)</label><input type="text" id="department_th">
-                            </div>
-                        </div>
-                        <div class="form-group"><label>Sender Name (TH)</label><input type="text" id="senderName_th">
-                        </div>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="form-group"><label>Sender Display Name</label><input type="text" id="senderName"
-                                value="STNET Radio HR" required></div>
-                        <div class="form-group"><label>Sender Email</label><input type="email" id="senderEmail"
-                                value="hr@stnetradio.com" required></div>
-                    </div>
-
-                    <div class="form-group" id="linkFieldContainer">
-                        <label>Action Link <span
-                                style="font-weight: normal; color: var(--text-muted); font-size: 12px;">(Booking URL /
-                                Staff Portal URL)</span></label>
-                        <input type="url" id="actionLink">
-                    </div>
-
-                    <button type="submit" class="btn" id="submitBtn"><i class="fa-regular fa-paper-plane"></i> Send
-                        Email</button>
-                    <div id="statusMessage" class="status-message"></div>
-                </form>
+                <div class="tpl-option" data-value="https://stnetradio.com/email/welcome.html" data-subject="Welcome to STNET Radio!" data-type="standard">
+                  <i class="fa-solid fa-party-horn"></i> Welcome
+                </div>
+                <div class="tpl-option" data-value="https://stnetradio.com/email/general.html" data-subject="Notification from STNET Radio" data-type="general">
+                  <i class="fa-solid fa-envelope"></i> General Email <span style="color:var(--text-3);font-size:0.78rem;">(อีเมลทั่วไป)</span>
+                </div>
+              </div>
             </div>
+            <input type="hidden" id="templateSelect"/>
+          </div>
+          <div class="field">
+            <label>Subject <span class="hint">หัวข้ออีเมล</span></label>
+            <input type="text" id="emailSubject" placeholder="Email subject line" required/>
+          </div>
         </div>
+      </div>
+
+      <!-- RECIPIENT -->
+      <div class="pcard fade-up">
+        <div class="pcard-head">
+          <i class="fa-solid fa-user"></i>
+          <h3>Recipient</h3>
+        </div>
+        <div class="pcard-body">
+          <div class="grid-2">
+            <div class="field">
+              <label>Name <span class="hint">ชื่อผู้รับ</span></label>
+              <input type="text" id="applicantName" placeholder="Full name" required/>
+            </div>
+            <div class="field">
+              <label>Email <span class="hint">อีเมลผู้รับ</span></label>
+              <input type="email" id="targetEmail" placeholder="recipient@email.com" required/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GENERAL EMAIL FIELDS -->
+      <div id="generalEmailFields">
+        <div class="pcard fade-up">
+          <div class="pcard-head">
+            <i class="fa-solid fa-pen-line"></i>
+            <h3>Email Content</h3>
+          </div>
+          <div class="pcard-body">
+            <p class="lang-header">English</p>
+            <div class="field"><label>Paragraph 1 (EN)</label><textarea id="p1_en" placeholder="Opening paragraph..."></textarea></div>
+            <div class="field"><label>Highlight Box (EN)</label><textarea id="hl_en" placeholder="Key message or call-to-action..."></textarea></div>
+            <div class="field" style="margin-bottom:0;"><label>Paragraph 2 (EN)</label><textarea id="p2_en" placeholder="Closing paragraph..."></textarea></div>
+          </div>
+          <div class="pcard-divider"></div>
+          <div class="pcard-body">
+            <p class="lang-header">ภาษาไทย</p>
+            <div class="field"><label>Paragraph 1 (TH)</label><textarea id="p1_th" placeholder="ย่อหน้าเปิด..."></textarea></div>
+            <div class="field"><label>Highlight Box (TH)</label><textarea id="hl_th" placeholder="ข้อความสำคัญ..."></textarea></div>
+            <div class="field" style="margin-bottom:0;"><label>Paragraph 2 (TH)</label><textarea id="p2_th" placeholder="ย่อหน้าปิด..."></textarea></div>
+          </div>
+          <div class="pcard-divider"></div>
+          <div class="pcard-body">
+            <p class="lang-header">Sender Signature</p>
+            <div class="grid-2">
+              <div class="field"><label>Department (EN)</label><input type="text" id="department_en" placeholder="e.g. Human Resources"/></div>
+              <div class="field"><label>Department (TH)</label><input type="text" id="department_th" placeholder="เช่น ฝ่ายทรัพยากรบุคคล"/></div>
+            </div>
+            <div class="field" style="margin-bottom:0;"><label>Sender Name (TH)</label><input type="text" id="senderName_th" placeholder="ชื่อผู้ส่ง (ภาษาไทย)"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SENDER + LINK -->
+      <div class="pcard fade-up">
+        <div class="pcard-head">
+          <i class="fa-solid fa-paper-plane"></i>
+          <h3>Sender &amp; Action</h3>
+        </div>
+        <div class="pcard-body">
+          <div class="grid-2">
+            <div class="field"><label>From Name</label><input type="text" id="senderName" value="STNET Radio HR" required/></div>
+            <div class="field"><label>From Email</label><input type="email" id="senderEmail" value="hr@stnetradio.com" required/></div>
+          </div>
+          <div class="field" id="linkFieldContainer" style="margin-bottom:0;">
+            <label>Action Link <span class="hint">Booking / Portal URL</span></label>
+            <input type="url" id="actionLink" placeholder="https://..."/>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="fade-up">
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <i class="fa-regular fa-paper-plane"></i> Send Email
+        </button>
+        <div id="statusMessage" class="status-msg"></div>
+      </div>
+
+    </form>
+
+  </main>
+
+  <footer>
+    <div class="footer-brand">STNET Radio</div>
+    <p class="footer-copy">&copy; 2026 STNET Radio. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/Privacy-Policy.html">Privacy</a>
+      <a href="/Terms-of-Service.html">Terms</a>
     </div>
+  </footer>
 
-    <script>
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyHJObG6JjRlRgA9ILS2yvQX8vLeTWgdpm1UGR57vhMQhjCfeDndeywFoZKe8Ls5DQ_/exec";
-        const AUTH0_DOMAIN = "auth.stnetradio.com";
-        const AUTH0_CLIENT_ID = "U4t6BLF2INrgwJbNTRXMpYitLD1SjTCW";
-        let auth0Client = null;
+</div>
 
-        // Auth0 Single Sign-On Logic
-        window.onload = async () => {
-            auth0Client = await auth0.createAuth0Client({
-                domain: AUTH0_DOMAIN,
-                clientId: AUTH0_CLIENT_ID,
-                authorizationParams: { redirect_uri: window.location.href },
-                cacheLocation: 'localstorage' // สำคัญเพื่อให้จำ Session ข้าม Tab
-            });
+<script>
+const GAS_API_URL="https://script.google.com/macros/s/AKfycbyHJObG6JjRlRgA9ILS2yvQX8vLeTWgdpm1UGR57vhMQhjCfeDndeywFoZKe8Ls5DQ_/exec";
+const AUTH0_DOMAIN="auth.stnetradio.com";
+const AUTH0_CLIENT_ID="U4t6BLF2INrgwJbNTRXMpYitLD1SjTCW";
+let auth0Client=null;
 
-            // 1. Handle Callback from Auth0 Login
-            if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
-                await auth0Client.handleRedirectCallback();
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
+window.onload=async()=>{
+  auth0Client=await auth0.createAuth0Client({
+    domain:AUTH0_DOMAIN,clientId:AUTH0_CLIENT_ID,
+    authorizationParams:{redirect_uri:window.location.href},
+    cacheLocation:'localstorage'
+  });
+  if(location.search.includes("state=")&&(location.search.includes("code=")||location.search.includes("error="))){
+    await auth0Client.handleRedirectCallback();
+    window.history.replaceState({},document.title,window.location.pathname);
+  }
+  const ok=await auth0Client.isAuthenticated();
+  if(ok){showApp();}else{try{await auth0Client.getTokenSilently();showApp();}catch{auth0Client.loginWithRedirect();}}
+};
 
-            // 2. Check current status
-            const isAuthenticated = await auth0Client.isAuthenticated();
+async function showApp(){
+  document.getElementById("loading-screen").style.display="none";
+  document.getElementById("app-view").style.display="block";
+  const user=await auth0Client.getUser();
+  if(user){
+    document.getElementById("nav-name").textContent=user.name||"STNET ID";
+    document.getElementById("dd-name").textContent=user.name||"STNET ID";
+    document.getElementById("dd-email").textContent=user.email||"";
+    if(user.picture)document.getElementById("nav-pic").src=user.picture;
+    document.getElementById("profile-wrap").style.display="flex";
+  }
+  const observer=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible');}),{threshold:0.08});
+  document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
 
-            if (isAuthenticated) {
-                showApp();
-            } else {
-                // 3. ✨ Try Silent Login (SSO) or Force Login
-                try {
-                    await auth0Client.getTokenSilently();
-                    showApp();
-                } catch (e) {
-                    // Not logged in anywhere, redirect to Auth0
-                    auth0Client.loginWithRedirect();
-                }
-            }
-        };
+  // Update sender badge live
+  document.getElementById("senderEmail").addEventListener("input",e=>{
+    document.getElementById("hero-sender").textContent=e.target.value||"hr@stnetradio.com";
+  });
+}
 
-        async function showApp() {
-            document.getElementById("loading-view").classList.remove("active-view");
-            document.getElementById("logout-container").style.display = "block";
-            document.getElementById("back-btn-container").style.display = "block";
-            document.getElementById("app-view").classList.add("active-view");
-            const user = await auth0Client.getUser();
-            document.getElementById("user-profile-name").innerText = user.name;
-            document.getElementById("user-profile-email").innerText = user.email;
+function logout(){auth0Client.logout({logoutParams:{returnTo:window.location.origin}});}
+function toggleDropdown(e){e.stopPropagation();document.getElementById("profile-dropdown").classList.toggle("open");}
+document.addEventListener('click',e=>{
+  document.getElementById("profile-dropdown")?.classList.remove("open");
+  if(!document.getElementById("tplSelectWrap")?.contains(e.target))closeTplDropdown();
+});
+function toggleMobileNav(){document.getElementById("mobile-nav").classList.toggle("open");}
 
-            document.getElementById("nav-user-name-text").innerText = user.name || "Staff";
-            document.getElementById("menu-user-name").innerText = user.name || "Staff";
-            document.getElementById("menu-user-email").innerText = user.email || "";
+// Template select
+function toggleTplDropdown(){
+  const t=document.getElementById("tplTrigger");
+  const d=document.getElementById("tplDropdown");
+  t.classList.toggle("open");
+  d.classList.toggle("open");
+}
+function closeTplDropdown(){
+  document.getElementById("tplTrigger")?.classList.remove("open");
+  document.getElementById("tplDropdown")?.classList.remove("open");
+}
 
-            if (user.picture) {
-                document.getElementById("nav-user-picture").src = user.picture;
-            }
-        }
+document.querySelectorAll(".tpl-option").forEach(opt=>{
+  opt.addEventListener("click",e=>{
+    e.stopPropagation();
+    const val=opt.dataset.value;
+    const subj=opt.dataset.subject;
+    const type=opt.dataset.type;
+    document.getElementById("templateSelect").value=val;
+    const lbl=document.getElementById("tplLabel");
+    lbl.textContent=opt.textContent.trim();
+    lbl.classList.add("selected");
+    document.getElementById("emailSubject").value=subj;
+    const isGeneral=type==="general";
+    document.getElementById("generalEmailFields").style.display=isGeneral?"block":"none";
+    document.getElementById("linkFieldContainer").style.display=isGeneral?"none":"block";
 
-        function logout() {
-            auth0Client.logout({ logoutParams: { returnTo: window.location.origin } });
-        }
+    // Re-observe new visible cards
+    const observer=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible');}),{threshold:0.08});
+    document.querySelectorAll('.fade-up:not(.visible)').forEach(el=>observer.observe(el));
 
-        function toggleProfileMenu(e) {
-            e.stopPropagation();
-            const menu = document.getElementById("profile-menu");
-            menu.classList.toggle("active");
-        }
+    closeTplDropdown();
+  });
+});
 
-        // Close menu when clicking outside
-        document.addEventListener('click', function (e) {
-            const dropdown = document.getElementById("user-profile-dropdown");
-            const menu = document.getElementById("profile-menu");
-            if (dropdown && !dropdown.contains(e.target)) {
-                menu.classList.remove("active");
-            }
-        });
+// Submit
+document.getElementById("emailForm").onsubmit=async(e)=>{
+  e.preventDefault();
+  const tpl=document.getElementById("templateSelect").value;
+  if(!tpl){alert("Please select a template first.");return;}
 
-        // Dropdown Logic
-        const customTemplateSelect = document.getElementById('customTemplateSelect');
-        const selectedTemplateText = document.getElementById('selectedTemplateText');
-        const templateOptionsList = document.getElementById('templateOptionsList');
-        const templateInput = document.getElementById('templateSelect');
+  const btn=document.getElementById("submitBtn");
+  const statusDiv=document.getElementById("statusMessage");
+  btn.disabled=true;
+  btn.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
+  statusDiv.className="status-msg loading";
+  statusDiv.style.display="block";
+  statusDiv.textContent="Processing request...";
 
-        customTemplateSelect.onclick = () => templateOptionsList.classList.toggle('select-hide');
+  const payload={
+    templateUrl:tpl,
+    emailSubject:document.getElementById("emailSubject").value,
+    applicantName:document.getElementById("applicantName").value,
+    email:document.getElementById("targetEmail").value,
+    fromName:document.getElementById("senderName").value,
+    fromEmail:document.getElementById("senderEmail").value,
+    actionLink:document.getElementById("actionLink").value,
+    p1_en:document.getElementById("p1_en").value,
+    hl_en:document.getElementById("hl_en").value,
+    p2_en:document.getElementById("p2_en").value,
+    p1_th:document.getElementById("p1_th").value,
+    hl_th:document.getElementById("hl_th").value,
+    p2_th:document.getElementById("p2_th").value,
+    department_en:document.getElementById("department_en").value,
+    senderName_th:document.getElementById("senderName_th").value,
+    department_th:document.getElementById("department_th").value
+  };
 
-        templateOptionsList.querySelectorAll('div').forEach(option => {
-            option.onclick = (e) => {
-                e.stopPropagation();
-                selectedTemplateText.textContent = option.textContent;
-                templateInput.value = option.getAttribute('data-value');
-                templateOptionsList.classList.add('select-hide');
-
-                document.getElementById('emailSubject').value = option.getAttribute('data-subject');
-                const isGeneral = option.getAttribute('data-type') === 'general';
-                document.getElementById('generalEmailFields').style.display = isGeneral ? 'block' : 'none';
-                document.getElementById('linkFieldContainer').style.display = isGeneral ? 'none' : 'block';
-            };
-        });
-
-        // Form Submit Logic
-        document.getElementById('emailForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const statusDiv = document.getElementById('statusMessage');
-            const selectedTemplate = templateInput.value;
-
-            if (!selectedTemplate) {
-                alert("Please select a template first.");
-                return;
-            }
-
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
-            statusDiv.style.display = 'block';
-            statusDiv.style.color = 'var(--text-main)';
-            statusDiv.innerHTML = 'Processing...';
-
-            const payload = {
-                templateUrl: selectedTemplate,
-                emailSubject: document.getElementById('emailSubject').value,
-                applicantName: document.getElementById('applicantName').value,
-                email: document.getElementById('targetEmail').value,
-                fromName: document.getElementById('senderName').value,
-                fromEmail: document.getElementById('senderEmail').value,
-                actionLink: document.getElementById('actionLink').value,
-                p1_en: document.getElementById('p1_en').value,
-                hl_en: document.getElementById('hl_en').value,
-                p2_en: document.getElementById('p2_en').value,
-                p1_th: document.getElementById('p1_th').value,
-                hl_th: document.getElementById('hl_th').value,
-                p2_th: document.getElementById('p2_th').value,
-                department_en: document.getElementById('department_en').value,
-                senderName_th: document.getElementById('senderName_th').value,
-                department_th: document.getElementById('department_th').value
-            };
-
-            try {
-                const response = await fetch(GAS_API_URL, {
-                    method: "POST",
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-
-                if (result.status === "success") {
-                    statusDiv.innerHTML = 'Sent Successfully!';
-                    statusDiv.style.color = 'var(--success)';
-                    document.getElementById('emailForm').reset();
-                    selectedTemplateText.textContent = "-- Please select a template --";
-                } else {
-                    statusDiv.innerHTML = 'Error: ' + result.message;
-                    statusDiv.style.color = 'var(--danger)';
-                }
-            } catch (err) {
-                statusDiv.innerHTML = 'Network Error';
-                statusDiv.style.color = 'var(--danger)';
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Send Email';
-            }
-        };
-    </script>
+  try{
+    const res=await fetch(GAS_API_URL,{method:"POST",body:JSON.stringify(payload)});
+    const result=await res.json();
+    if(result.status==="success"){
+      statusDiv.className="status-msg success";
+      statusDiv.textContent="✓ Email sent successfully";
+      document.getElementById("emailForm").reset();
+      document.getElementById("tplLabel").textContent="Select a template";
+      document.getElementById("tplLabel").classList.remove("selected");
+      document.getElementById("generalEmailFields").style.display="none";
+      document.getElementById("linkFieldContainer").style.display="block";
+    }else{
+      statusDiv.className="status-msg error";
+      statusDiv.textContent="Error: "+result.message;
+    }
+  }catch{
+    statusDiv.className="status-msg error";
+    statusDiv.textContent="Network error — please try again";
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<i class="fa-regular fa-paper-plane"></i> Send Email';
+  }
+};
+</script>
 </body>
-
 </html>
